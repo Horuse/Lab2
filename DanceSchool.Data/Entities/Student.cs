@@ -35,5 +35,11 @@ namespace DanceSchool.Data.Entities
 
         [Required]
         public DateTime RegistrationDate { get; set; }
+
+        public ICollection<StudentGroup> StudentGroups { get; set; } = new List<StudentGroup>();
+        public ICollection<Attendance> Attendances { get; set; } = new List<Attendance>();
+        public ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();
+        public ICollection<TrialLesson> TrialLessons { get; set; } = new List<TrialLesson>();
+        public ICollection<PerformanceStudent> PerformanceStudents { get; set; } = new List<PerformanceStudent>();
     }
 }

@@ -3,6 +3,7 @@ using System;
 using DanceSchool.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DanceSchool.Data.Migrations
 {
     [DbContext(typeof(DanceSchoolDbContext))]
-    partial class DanceSchoolDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251116143830_CreatePerformanceStudent")]
+    partial class CreatePerformanceStudent
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
@@ -389,51 +392,6 @@ namespace DanceSchool.Data.Migrations
                     b.ToTable("Subscriptions");
                 });
 
-            modelBuilder.Entity("DanceSchool.Data.Entities.TrialLesson", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("CoordinationScore")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("InstructorId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("MusicScore")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("RecommendedGroupId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("TechniqueScore")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InstructorId");
-
-                    b.HasIndex("RecommendedGroupId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("TrialLessons");
-                });
-
             modelBuilder.Entity("DanceSchool.Data.Entities.Attendance", b =>
                 {
                     b.HasOne("DanceSchool.Data.Entities.Class", "Class")
@@ -544,31 +502,6 @@ namespace DanceSchool.Data.Migrations
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("DanceSchool.Data.Entities.TrialLesson", b =>
-                {
-                    b.HasOne("DanceSchool.Data.Entities.Instructor", "Instructor")
-                        .WithMany()
-                        .HasForeignKey("InstructorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DanceSchool.Data.Entities.Group", "RecommendedGroup")
-                        .WithMany()
-                        .HasForeignKey("RecommendedGroupId");
-
-                    b.HasOne("DanceSchool.Data.Entities.Student", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Instructor");
-
-                    b.Navigation("RecommendedGroup");
 
                     b.Navigation("Student");
                 });

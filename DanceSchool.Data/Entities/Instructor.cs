@@ -26,5 +26,9 @@ namespace DanceSchool.Data.Entities
 
         [Required]
         public DateTime HireDate { get; set; }
+
+        public ICollection<GroupInstructor> GroupInstructors { get; set; } = new List<GroupInstructor>();
+        public ICollection<Class> Classes { get; set; } = new List<Class>();
+        public ICollection<TrialLesson> TrialLessons { get; set; } = new List<TrialLesson>();
     }
 }

@@ -15,6 +15,8 @@ namespace DanceSchool.Data
         public DbSet<Attendance> Attendances { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<Performance> Performances { get; set; }
+        public DbSet<PerformanceStudent> PerformanceStudents { get; set; }
+        public DbSet<TrialLesson> TrialLessons { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

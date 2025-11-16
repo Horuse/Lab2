@@ -23,5 +23,10 @@ namespace DanceSchool.Data.Entities
 
         [MaxLength(200)]
         public string? Schedule { get; set; }
+
+        public ICollection<StudentGroup> StudentGroups { get; set; } = new List<StudentGroup>();
+        public ICollection<GroupInstructor> GroupInstructors { get; set; } = new List<GroupInstructor>();
+        public ICollection<Class> Classes { get; set; } = new List<Class>();
+        public ICollection<TrialLesson> RecommendedTrialLessons { get; set; } = new List<TrialLesson>();
     }
 }
