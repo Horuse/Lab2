@@ -3,6 +3,7 @@ using System;
 using DanceSchool.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,54 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DanceSchool.Data.Migrations
 {
     [DbContext(typeof(DanceSchoolDbContext))]
-    partial class DanceSchoolDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251116121802_CreateGroupInstructor")]
+    partial class CreateGroupInstructor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
-
-            modelBuilder.Entity("DanceSchool.Data.Entities.Class", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ClassType")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("TEXT");
-
-                    b.Property<TimeSpan>("EndTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("GroupId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("InstructorId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<TimeSpan>("StartTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("StudioId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Topic")
-                        .HasMaxLength(200)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GroupId");
-
-                    b.HasIndex("InstructorId");
-
-                    b.HasIndex("StudioId");
-
-                    b.ToTable("Classes");
-                });
 
             modelBuilder.Entity("DanceSchool.Data.Entities.Group", b =>
                 {
@@ -252,33 +213,6 @@ namespace DanceSchool.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Studios");
-                });
-
-            modelBuilder.Entity("DanceSchool.Data.Entities.Class", b =>
-                {
-                    b.HasOne("DanceSchool.Data.Entities.Group", "Group")
-                        .WithMany()
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DanceSchool.Data.Entities.Instructor", "Instructor")
-                        .WithMany()
-                        .HasForeignKey("InstructorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DanceSchool.Data.Entities.Studio", "Studio")
-                        .WithMany()
-                        .HasForeignKey("StudioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Group");
-
-                    b.Navigation("Instructor");
-
-                    b.Navigation("Studio");
                 });
 
             modelBuilder.Entity("DanceSchool.Data.Entities.GroupInstructor", b =>
