@@ -29,5 +29,7 @@ namespace DanceSchool.Data.Entities
 
         [MaxLength(1000)]
         public string? Notes { get; set; }
+
+        public ICollection<PerformanceStudent> PerformanceStudents { get; set; } = new List<PerformanceStudent>();
     }
 }

@@ -41,5 +41,7 @@ namespace DanceSchool.Data.Entities
 
         [ForeignKey(nameof(StudioId))]
         public Studio Studio { get; set; }
+
+        public ICollection<Attendance> Attendances { get; set; } = new List<Attendance>();
     }
 }
