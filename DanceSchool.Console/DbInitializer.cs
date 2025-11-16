@@ -207,3 +207,28 @@ namespace DanceSchool.Console
             {
                 var groupStudents = context.StudentGroups.Where(sg => sg.GroupId == cls.GroupId).ToList();
                 
+                foreach (var sg in groupStudents)
+                {
+                    var rand = random.NextDouble();
+                    var status = AttendanceStatus.Present;
+                    
+                    if (rand > weights[0]) 
+                        status = rand > weights[0] + weights[1] ? AttendanceStatus.Frozen : AttendanceStatus.Absent;
+                    
+                    attendances.Add(new Attendance
+                    {
+                        StudentId = sg.StudentId,
+                        ClassId = cls.Id,
+                        Status = status,
+                        AbsentReason = status == AttendanceStatus.Absent ? "Хвороба" : null,
+                        Notes = status == AttendanceStatus.Present ? "Активно займався" : null
+                    });
+                }
+            }
+            context.Attendances.AddRange(attendances);
+            context.SaveChanges();
+
+            System.Console.WriteLine("База даних успішно заповнена тестовими даними!");
+        }
+    }
+}
