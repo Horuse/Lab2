@@ -9,6 +9,7 @@ namespace DanceSchool.Data
         public DbSet<Group> Groups { get; set; }
         public DbSet<Instructor> Instructors { get; set; }
         public DbSet<Studio> Studios { get; set; }
+        public DbSet<StudentGroup> StudentGroups { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
