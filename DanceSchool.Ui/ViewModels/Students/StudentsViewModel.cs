@@ -7,12 +7,16 @@ using ReactiveUI.SourceGenerators;
 using DanceSchool.Data.Entities;
 using DanceSchool.Ui.Models;
 using DanceSchool.Ui.Services;
+using ShadUI;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DanceSchool.Ui.ViewModels.Students
 {
     public partial class StudentsViewModel : ViewModelBase
     {
         private readonly StudentService _studentService;
+        private readonly DialogManager _dialogManager;
+        private readonly IServiceProvider _serviceProvider;
 
         [Reactive]
         private ObservableCollection<StudentItem> _students = new();
@@ -23,9 +27,11 @@ namespace DanceSchool.Ui.ViewModels.Students
         [Reactive]
         private bool _isLoading;
 
-        public StudentsViewModel(StudentService studentService)
+        public StudentsViewModel(StudentService studentService, DialogManager dialogManager, IServiceProvider serviceProvider)
         {
             _studentService = studentService;
+            _dialogManager = dialogManager;
+            _serviceProvider = serviceProvider;
         }
 
         [ReactiveCommand]
@@ -48,19 +54,18 @@ namespace DanceSchool.Ui.ViewModels.Students
         }
 
         [ReactiveCommand]
-        private async Task AddStudent()
+        private void AddStudent()
         {
-            var newStudent = new Student
-            {
-                FirstName = "Новий",
-                LastName = "Студент",
-                DateOfBirth = DateTime.Now.AddYears(-10),
-                RegistrationDate = DateTime.Now,
-                SkillLevel = Data.Enums.SkillLevel.Starter
-            };
-
-            await _studentService.CreateStudentAsync(newStudent);
-            await LoadStudents();
+            var addStudentViewModel = _serviceProvider.GetRequiredService<AddStudentViewModel>();
+            addStudentViewModel.Initialize();
+            
+            _dialogManager.CreateDialog(addStudentViewModel)
+                .Dismissible()
+                .WithSuccessCallback(async vm =>
+                {
+                    await LoadStudents();
+                })
+                .Show();
         }
 
         [ReactiveCommand]

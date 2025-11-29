@@ -9,6 +9,7 @@ using DanceSchool.Ui.ViewModels.Instructors;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Reactive;
+using ShadUI;
 
 namespace DanceSchool.Ui.ViewModels;
 
@@ -23,16 +24,17 @@ public partial class MainWindowViewModel : ViewModelBase
     private string _selectedView = "Dashboard";
 
     public ObservableCollection<string> MenuItems { get; }
+    public DialogManager DialogManager { get; }
 
-    // ViewModels for different sections
     public StudentsViewModel StudentsViewModel { get; }
     public GroupsViewModel GroupsViewModel { get; }
     public ClassesViewModel ClassesViewModel { get; }
     public InstructorsViewModel InstructorsViewModel { get; }
 
-    public MainWindowViewModel(IServiceProvider serviceProvider)
+    public MainWindowViewModel(IServiceProvider serviceProvider, DialogManager dialogManager)
     {
         _serviceProvider = serviceProvider;
+        DialogManager = dialogManager;
         
         // Initialize child ViewModels
         StudentsViewModel = _serviceProvider.GetRequiredService<StudentsViewModel>();

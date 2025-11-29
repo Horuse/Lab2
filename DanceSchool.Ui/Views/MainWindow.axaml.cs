@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+using Window = ShadUI.Window;
 
 namespace DanceSchool.Ui.Views;
 

@@ -33,4 +33,10 @@
   <ItemGroup>
     <ProjectReference Include="..\DanceSchool.Data\DanceSchool.Data.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\Students\AddStudentDialog.axaml.cs">
+      <DependentUpon>AddStudentDialog.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>

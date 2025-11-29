@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="DanceSchool.Ui/App.axaml" value="DanceSchool.Ui/DanceSchool.Ui.csproj" />
+        <entry key="DanceSchool.Ui/Views/MainWindow.axaml" value="DanceSchool.Ui/DanceSchool.Ui.csproj" />
+        <entry key="DanceSchool.Ui/Views/Students/AddStudentDialog.axaml" value="DanceSchool.Ui/DanceSchool.Ui.csproj" />
+        <entry key="DanceSchool.Ui/Views/Students/StudentsView.axaml" value="DanceSchool.Ui/DanceSchool.Ui.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

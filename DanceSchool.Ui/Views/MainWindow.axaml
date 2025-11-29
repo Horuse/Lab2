@@ -6,9 +6,6 @@
                xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
                xmlns:converters="using:DanceSchool.Ui.Converters"
                xmlns:views="using:DanceSchool.Ui.Views.Students"
-               xmlns:groupViews="using:DanceSchool.Ui.Views.Groups"
-               xmlns:classViews="using:DanceSchool.Ui.Views.Classes"
-               xmlns:instructorViews="using:DanceSchool.Ui.Views.Instructors"
                mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
                x:Class="DanceSchool.Ui.Views.MainWindow"
                x:DataType="vm:MainWindowViewModel"
@@ -16,6 +13,12 @@
                Title="{Binding Title}"
                Width="1200" Height="800"
                WindowState="Normal">
+    
+    <shadui:Window.Hosts>
+        <shadui:DialogHost 
+            Manager="{Binding DialogManager}"
+            Owner="{Binding RelativeSource={RelativeSource AncestorType=shadui:Window}}"/>
+    </shadui:Window.Hosts>
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>

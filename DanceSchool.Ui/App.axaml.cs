@@ -15,6 +15,9 @@ using DanceSchool.Ui.Repositories;
 using DanceSchool.Ui.Services;
 using Microsoft.EntityFrameworkCore;
 using Splat;
+using ShadUI;
+using DanceSchool.Ui.ViewModels.Students;
+using DanceSchool.Ui.Views.Students;
 
 namespace DanceSchool.Ui;
 
@@ -36,6 +39,8 @@ public partial class App : Application
         var services = new ServiceCollection();
         ConfigureServices(services);
         ServiceProvider = services.BuildServiceProvider();
+        
+        RegisterDialogs(ServiceProvider);
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
@@ -74,13 +79,22 @@ public partial class App : Application
         services.AddTransient<ViewModels.Groups.GroupsViewModel>();
         services.AddTransient<ViewModels.Classes.ClassesViewModel>();
         services.AddTransient<ViewModels.Instructors.InstructorsViewModel>();
+        services.AddTransient<AddStudentViewModel>();
+        
+        
+        services.AddSingleton<DialogManager>();
         
         services.AddTransient<IServiceProvider>(sp => sp);
         
-        var serviceProvider = services.BuildServiceProvider();
-        using var scope = serviceProvider.CreateScope();
+        using var scope = services.BuildServiceProvider().CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<DanceSchoolDbContext>();
         DanceSchool.Ui.Services.DbInitializer.Seed(context);
+    }
+
+    private void RegisterDialogs(IServiceProvider serviceProvider)
+    {
+        var dialogManager = serviceProvider.GetRequiredService<DialogManager>();
+        dialogManager.Register<AddStudentDialog, AddStudentViewModel>();
     }
 
     private void DisableAvaloniaDataAnnotationValidation()
