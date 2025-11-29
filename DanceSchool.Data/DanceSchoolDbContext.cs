@@ -5,6 +5,10 @@ namespace DanceSchool.Data
 {
     public class DanceSchoolDbContext : DbContext
     {
+        public DanceSchoolDbContext() { }
+
+        public DanceSchoolDbContext(DbContextOptions<DanceSchoolDbContext> options) : base(options) { }
+
         public DbSet<Student> Students { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Instructor> Instructors { get; set; }
@@ -20,7 +24,10 @@ namespace DanceSchool.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=danceschool.db");
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlite("Data Source=danceschool.db");
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
