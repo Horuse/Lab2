@@ -1,0 +1,107 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             xmlns:vm="using:DanceSchool.Ui.ViewModels.Classes"
+             xmlns:entities="clr-namespace:DanceSchool.Data.Entities;assembly=DanceSchool.Data"
+             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="700"
+             x:Class="DanceSchool.Ui.Views.Classes.AddClassDialog"
+             x:DataType="vm:AddClassViewModel">
+
+    <StackPanel Spacing="24" Margin="24">
+        <StackPanel Spacing="8">
+            <TextBlock Text="Додати заняття" Classes="h3" FontWeight="Bold" />
+            <TextBlock Text="Заповніть дані нового заняття" Classes="Small Muted" />
+        </StackPanel>
+
+        <StackPanel Spacing="16">
+            <Grid ColumnDefinitions="* *" ColumnSpacing="16">
+                <StackPanel Grid.Column="0" Spacing="8">
+                    <TextBlock Text="Дата" Classes="Small" />
+                    <CalendarDatePicker SelectedDate="{Binding Date, Mode=TwoWay}"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="1" Spacing="8">
+                    <TextBlock Text="Тип заняття" Classes="Small" />
+                    <ComboBox ItemsSource="{Binding ClassTypes}"
+                             SelectedItem="{Binding ClassType, Mode=TwoWay}"
+                             PlaceholderText="Оберіть тип класу..."/>
+                </StackPanel>
+            </Grid>
+
+            <Grid ColumnDefinitions="* *" ColumnSpacing="16">
+                <StackPanel Grid.Column="0" Spacing="8">
+                    <TextBlock Text="Час початку" Classes="Small" />
+                    <TimePicker SelectedTime="{Binding StartTime, Mode=TwoWay}"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="1" Spacing="8">
+                    <TextBlock Text="Час завершення" Classes="Small" />
+                    <TimePicker SelectedTime="{Binding EndTime, Mode=TwoWay}"/>
+                </StackPanel>
+            </Grid>
+
+            <StackPanel Spacing="8">
+                <TextBlock Text="Тема (необов'язково)" Classes="Small" />
+                <TextBox Text="{Binding Topic, Mode=TwoWay}"
+                        Watermark="Тема заняття..."/>
+            </StackPanel>
+
+            <StackPanel Spacing="8">
+                <TextBlock Text="Група" Classes="Small" />
+                <ComboBox ItemsSource="{Binding Groups}"
+                         SelectedItem="{Binding SelectedGroup, Mode=TwoWay}"
+                         DisplayMemberBinding="{Binding Name}"
+                         PlaceholderText="Оберіть группу..."
+                         />
+            </StackPanel>
+
+            <StackPanel Spacing="8">
+                <TextBlock Text="Інструктор" Classes="Small" />
+                <ComboBox ItemsSource="{Binding Instructors}"
+                         SelectedItem="{Binding SelectedInstructor, Mode=TwoWay}"
+                        >
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="entities:Instructor">
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <TextBlock Text="{Binding FirstName}" />
+                                <TextBlock Text="{Binding LastName}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                
+            </StackPanel>
+
+            <StackPanel Spacing="8">
+                
+                <TextBlock Text="Студія" Classes="Small" />
+                <ComboBox ItemsSource="{Binding Studios}"
+                         SelectedItem="{Binding SelectedStudio, Mode=TwoWay}"
+                         DisplayMemberBinding="{Binding Name}"
+                         PlaceholderText="Оберіть студію..."/>
+            </StackPanel>
+        </StackPanel>
+
+        <Grid ColumnDefinitions="* Auto Auto" ColumnSpacing="12">
+            <ProgressBar Grid.Column="0" 
+                        IsIndeterminate="True" 
+                        IsVisible="{Binding IsLoading}"
+                        Height="4"
+                        VerticalAlignment="Center" />
+
+            <Button Grid.Column="1" 
+                   Classes="Secondary"
+                   Content="Скасувати"
+                   Command="{Binding CancelCommand}"
+                   Width="100" />
+
+            <Button Grid.Column="2" 
+                   Classes="Primary"
+                   Content="Додати"
+                   Command="{Binding SubmitCommand}"
+                   Width="100" />
+        </Grid>
+    </StackPanel>
+</UserControl>

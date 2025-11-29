@@ -1,0 +1,72 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             xmlns:vm="using:DanceSchool.Ui.ViewModels.Instructors"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600"
+             x:Class="DanceSchool.Ui.Views.Instructors.AddInstructorDialog"
+             x:DataType="vm:AddInstructorViewModel">
+
+    <StackPanel Spacing="24" Margin="24">
+        <!-- Header -->
+        <StackPanel Spacing="8">
+            <TextBlock Text="Додати інструктора" Classes="h3" FontWeight="Bold" />
+            <TextBlock Text="Заповніть дані нового інструктора" Classes="Small Muted" />
+        </StackPanel>
+        
+        <!-- Form Fields -->
+        <StackPanel Spacing="16">
+            <TextBox
+                Classes="Clearable"
+                UseFloatingWatermark="True"
+                Text="{Binding FirstName, Mode=TwoWay}"
+                Watermark="Введіть ім'я"
+                Width="300"
+                shadui:ControlAssist.Label="Ім'я" />
+            
+            <TextBox
+                Classes="Clearable"
+                UseFloatingWatermark="True"
+                Text="{Binding LastName, Mode=TwoWay}"
+                Watermark="Введіть прізвище"
+                Width="300"
+                shadui:ControlAssist.Label="Прізвище" />
+            
+            <TextBox
+                Classes="Clearable"
+                UseFloatingWatermark="True"
+                Text="{Binding PhoneNumber, Mode=TwoWay}"
+                Watermark="+380..."
+                Width="300"
+                shadui:ControlAssist.Label="Телефон" />
+            
+            <TextBox
+                Classes="Clearable"
+                UseFloatingWatermark="True"
+                Text="{Binding Email, Mode=TwoWay}"
+                Watermark="instructor@example.com"
+                Width="300"
+                shadui:ControlAssist.Label="Email" />
+            
+            <TextBox
+                Classes="Clearable"
+                UseFloatingWatermark="True"
+                Text="{Binding Specialization, Mode=TwoWay}"
+                Watermark="Наприклад: Бальні танці, Хіп-хоп"
+                Width="300"
+                shadui:ControlAssist.Label="Спеціалізація" />
+            
+            <CalendarDatePicker
+                SelectedDate="{Binding HireDate, Mode=TwoWay}"
+                Width="300"
+                shadui:ControlAssist.Label="Дата прийняття на роботу" />
+        </StackPanel>
+        
+        <!-- Footer with buttons -->
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right" Margin="0,16,0,0">
+            <Button Classes="Outline" Command="{Binding CancelCommand}">Скасувати</Button>
+            <Button Classes="Primary" Command="{Binding SubmitCommand}">Додати</Button>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

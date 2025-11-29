@@ -1,0 +1,100 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             xmlns:vm="using:DanceSchool.Ui.ViewModels.Groups"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="DanceSchool.Ui.Views.Groups.GroupsView"
+             x:DataType="vm:GroupsViewModel">
+
+    <StackPanel Spacing="24">
+        <!-- Header with Add button -->
+        <Grid ColumnDefinitions="*,Auto">
+            <StackPanel Grid.Column="0" Spacing="8">
+                <TextBlock Text="Групи" Classes="h2" />
+                <TextBlock Text="Управління групами танцювальної школи" Classes="Small Muted" />
+            </StackPanel>
+            <Button Grid.Column="1" 
+                    Classes="Primary" 
+                    Command="{Binding AddGroupCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Classes="LucideIcon" Text="&#57665;" FontSize="16" />
+                    <TextBlock Text="Додати групу" />
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <!-- Groups List -->
+        <shadui:Card HasShadow="True">
+            <shadui:Card.Header>
+                <StackPanel>
+                    <shadui:CardTitle>Список груп</shadui:CardTitle>
+                    <shadui:CardDescription>Усі групи в танцювальній школі</shadui:CardDescription>
+                </StackPanel>
+            </shadui:Card.Header>
+            
+            <ScrollViewer>
+                <ItemsControl ItemsSource="{Binding Groups}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="vm:GroupItemViewModel">
+                            <Border BorderBrush="{DynamicResource BorderColor}" 
+                                    BorderThickness="0,0,0,1" 
+                                    Padding="16,12">
+                                <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="16">
+                                    <StackPanel Grid.Column="0" Spacing="4">
+                                        <TextBlock Text="{Binding Name}" 
+                                                   FontWeight="Medium" 
+                                                   FontSize="16" />
+                                        <StackPanel Orientation="Horizontal" Spacing="16">
+                                            <TextBlock Classes="Small Muted">
+                                                <Run Text="Інструктори:" />
+                                                <Run Text="{Binding InstructorsNames}" />
+                                            </TextBlock>
+                                            <TextBlock Classes="Small Muted">
+                                                <Run Text="Студентів:" />
+                                                <Run Text="{Binding StudentsCount}" />
+                                                <Run Text="/" />
+                                                <Run Text="{Binding MaxCapacity}" />
+                                            </TextBlock>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="16">
+                                            <TextBlock Classes="Small Muted">
+                                                <Run Text="Вік:" />
+                                                <Run Text="{Binding AgeCategory}" />
+                                            </TextBlock>
+                                            <TextBlock Classes="Small Muted">
+                                                <Run Text="Рівень:" />
+                                                <Run Text="{Binding SkillLevel}" />
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    
+                                    <TextBlock Grid.Column="1" 
+                                               Classes="Small Muted" 
+                                               Text="{Binding Schedule}" 
+                                               VerticalAlignment="Center" />
+                                    
+                                    <Border Grid.Column="2" />
+                                    
+                                    <StackPanel Grid.Column="3" 
+                                                Orientation="Horizontal" 
+                                                Spacing="8">
+                                        <Button Classes="Ghost Icon" 
+                                                ToolTip.Tip="Редагувати">
+                                            <TextBlock Classes="LucideIcon" Text="&#57849;" />
+                                        </Button>
+                                        <Button Classes="Ghost Icon" 
+                                                ToolTip.Tip="Видалити">
+                                            <TextBlock Classes="LucideIcon" Text="&#57741;" />
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </shadui:Card>
+    </StackPanel>
+</UserControl>

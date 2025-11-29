@@ -38,5 +38,14 @@
     <Compile Update="Views\Students\AddStudentDialog.axaml.cs">
       <DependentUpon>AddStudentDialog.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\Groups\GroupsView.axaml.cs">
+      <DependentUpon>GroupsView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Instructors\AddInstructorDialog.axaml.cs">
+      <DependentUpon>AddInstructorDialog.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Classes\AddClassDialog.axaml.cs">
+      <DependentUpon>AddClassDialog.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

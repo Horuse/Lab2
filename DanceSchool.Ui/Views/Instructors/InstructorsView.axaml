@@ -3,26 +3,26 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
-             xmlns:vm="using:DanceSchool.Ui.ViewModels.Students"
+             xmlns:vm="using:DanceSchool.Ui.ViewModels.Instructors"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="DanceSchool.Ui.Views.Students.StudentsView"
-             x:DataType="vm:StudentsViewModel">
+             x:Class="DanceSchool.Ui.Views.Instructors.InstructorsView"
+             x:DataType="vm:InstructorsViewModel">
 
     <ScrollViewer HorizontalScrollBarVisibility="Auto">
         <StackPanel HorizontalAlignment="Center" Spacing="16" Width="1100">
             <Grid ColumnDefinitions="* Auto">
                 <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="16">
-                    <Button Classes="Primary" Command="{Binding LoadStudentsCommand}">
+                    <Button Classes="Primary" Command="{Binding LoadInstructorsCommand}">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <TextBlock Classes="LucideIcon" Text="&#57732;" FontSize="16"/>
                             <TextBlock Text="Оновити"/>
                         </StackPanel>
                     </Button>
                     
-                    <Button Classes="Secondary" Command="{Binding AddStudentCommand}">
+                    <Button Classes="Secondary" Command="{Binding AddInstructorCommand}">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <TextBlock Classes="LucideIcon" Text="&#57665;" FontSize="16"/>
-                            <TextBlock Text="Додати студента"/>
+                            <TextBlock Text="Додати інструктора"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -30,7 +30,7 @@
                 <TextBox Grid.Column="1"
                          Classes="Clearable"
                          Width="250" 
-                         Watermark="Пошук студентів..."
+                         Watermark="Пошук інструкторів..."
                          shadui:ControlAssist.ShowProgress="{Binding IsLoading}">
                     <TextBox.InnerRightContent>
                         <PathIcon Data="{x:Static shadui:Icons.Search}" 
@@ -43,7 +43,7 @@
             <DataGrid CanUserReorderColumns="False"
                       CanUserSortColumns="True"
                       GridLinesVisibility="Horizontal"
-                      ItemsSource="{Binding Students}"
+                      ItemsSource="{Binding Instructors}"
                       SelectionMode="Single"
                       x:Name="DataGrid">
                 
@@ -64,11 +64,6 @@
                                         Width="*"
                                         MinWidth="120"/>
                     
-                    <DataGridTextColumn Header="Дата народження" 
-                                        Binding="{Binding DateOfBirth, StringFormat=dd/MM/yyyy}" 
-                                        Width="120"
-                                        IsReadOnly="True"/>
-                    
                     <DataGridTextColumn Header="Телефон" 
                                         Binding="{Binding PhoneNumber}" 
                                         Width="120"/>
@@ -78,10 +73,26 @@
                                         Width="*"
                                         MinWidth="150"/>
                     
-                    <DataGridTextColumn Header="Рівень навичок" 
-                                        Binding="{Binding SkillLevel}" 
+                    <DataGridTextColumn Header="Спеціалізація" 
+                                        Binding="{Binding Specialization}" 
+                                        Width="*"
+                                        MinWidth="120"/>
+                    
+                    <DataGridTextColumn Header="Дата прийняття" 
+                                        Binding="{Binding HireDate, StringFormat=dd/MM/yyyy}" 
                                         Width="120"
                                         IsReadOnly="True"/>
+                    
+                    <DataGridTextColumn Header="Групи" 
+                                        Binding="{Binding GroupsCount}" 
+                                        Width="80"
+                                        IsReadOnly="True"/>
+                    
+                    <DataGridTextColumn Header="Заняття" 
+                                        Binding="{Binding ClassesCount}" 
+                                        Width="80"
+                                        IsReadOnly="True"/>
+
                     <DataGridTemplateColumn CanUserResize="False" CanUserSort="False" Header="Дії">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -98,7 +109,7 @@
                                         <TextBlock Classes="Caption Muted" Text="Дії" />
                                     </shadui:SimpleDropdown.MenuLabel>
                                     <Separator />
-                                    <Button Content="Редагувати студента">
+                                    <Button Content="Редагувати інструктора">
                                         <shadui:ButtonAssist.Icon>
                                             <TextBlock Classes="LucideIcon" Text="&#57849;" />
                                         </shadui:ButtonAssist.Icon>
@@ -108,15 +119,15 @@
                                             <TextBlock Classes="LucideIcon" Text="&#57954;" />
                                         </shadui:ButtonAssist.Icon>
                                     </Button>
-                                    <Button Content="Відвідування">
+                                    <Button Content="Розклад занять">
                                         <shadui:ButtonAssist.Icon>
-                                            <TextBlock Classes="LucideIcon" Text="&#57456;" />
+                                            <TextBlock Classes="LucideIcon" Text="&#57515;" />
                                         </shadui:ButtonAssist.Icon>
                                     </Button>
                                     <Separator />
                                     <Button Classes="DestructiveMenu" 
-                                            Content="Видалити студента"
-                                            Command="{Binding $parent[UserControl].((vm:StudentsViewModel)DataContext).DeleteStudentCommand}"
+                                            Content="Видалити інструктора"
+                                            Command="{Binding $parent[UserControl].((vm:InstructorsViewModel)DataContext).DeleteInstructorCommand}"
                                             CommandParameter="{Binding Id}">
                                         <shadui:ButtonAssist.Icon>
                                             <TextBlock Classes="LucideIcon" Text="&#57741;" />
@@ -131,8 +142,8 @@
 
             <Grid ColumnDefinitions="* Auto">
                 <TextBlock Classes="Small Muted" VerticalAlignment="Center">
-                    <Run Text="{Binding Students.Count}" />
-                    <Run Text="студентів всього" />
+                    <Run Text="{Binding Instructors.Count}" />
+                    <Run Text="інструкторів всього" />
                 </TextBlock>
                 <StackPanel Grid.Column="1" 
                             Orientation="Horizontal" 
@@ -150,7 +161,7 @@
                     VerticalAlignment="Center">
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
                     <ProgressBar IsIndeterminate="True" Width="200" Height="4"/>
-                    <TextBlock Text="Завантаження студентів..." Classes="Small"/>
+                    <TextBlock Text="Завантаження інструкторів..." Classes="Small"/>
                 </StackPanel>
             </Border>
         </StackPanel>

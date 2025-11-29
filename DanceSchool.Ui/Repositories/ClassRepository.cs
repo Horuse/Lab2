@@ -17,46 +17,50 @@ namespace DanceSchool.Ui.Repositories
 
         public async Task<IEnumerable<Class>> GetClassesForDateAsync(DateTime date)
         {
-            return await _dbSet
+            var classes = await _dbSet
                 .Where(c => c.Date.Date == date.Date)
                 .Include(c => c.Group)
                 .Include(c => c.Instructor)
                 .Include(c => c.Studio)
-                .OrderBy(c => c.StartTime)
                 .ToListAsync();
+                
+            return classes.OrderBy(c => c.StartTime);
         }
 
         public async Task<IEnumerable<Class>> GetClassesWithDetailsAsync()
         {
-            return await _dbSet
+            var classes = await _dbSet
                 .Include(c => c.Group)
                 .Include(c => c.Instructor)
                 .Include(c => c.Studio)
                 .OrderByDescending(c => c.Date)
-                .ThenBy(c => c.StartTime)
                 .ToListAsync();
+                
+            return classes.OrderByDescending(c => c.Date).ThenBy(c => c.StartTime);
         }
 
         public async Task<IEnumerable<Class>> GetClassesByGroupIdAsync(int groupId)
         {
-            return await _dbSet
+            var classes = await _dbSet
                 .Where(c => c.GroupId == groupId)
                 .Include(c => c.Instructor)
                 .Include(c => c.Studio)
                 .OrderByDescending(c => c.Date)
-                .ThenBy(c => c.StartTime)
                 .ToListAsync();
+                
+            return classes.OrderByDescending(c => c.Date).ThenBy(c => c.StartTime);
         }
 
         public async Task<IEnumerable<Class>> GetClassesByInstructorIdAsync(int instructorId)
         {
-            return await _dbSet
+            var classes = await _dbSet
                 .Where(c => c.InstructorId == instructorId)
                 .Include(c => c.Group)
                 .Include(c => c.Studio)
                 .OrderByDescending(c => c.Date)
-                .ThenBy(c => c.StartTime)
                 .ToListAsync();
+                
+            return classes.OrderByDescending(c => c.Date).ThenBy(c => c.StartTime);
         }
 
         public async Task<Class?> GetClassWithDetailsAsync(int id)

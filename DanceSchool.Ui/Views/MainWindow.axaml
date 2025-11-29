@@ -6,6 +6,9 @@
                xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
                xmlns:converters="using:DanceSchool.Ui.Converters"
                xmlns:views="using:DanceSchool.Ui.Views.Students"
+               xmlns:groupViews="using:DanceSchool.Ui.Views.Groups"
+               xmlns:instructorViews="using:DanceSchool.Ui.Views.Instructors"
+               xmlns:classViews="using:DanceSchool.Ui.Views.Classes"
                mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
                x:Class="DanceSchool.Ui.Views.MainWindow"
                x:DataType="vm:MainWindowViewModel"
@@ -334,26 +337,14 @@
                 <views:StudentsView IsVisible="{Binding $parent[Panel].DataContext.SelectedView, Converter={StaticResource StringEquals}, ConverterParameter=Students}"
                                    DataContext="{Binding StudentsViewModel}"/>
 
-                <StackPanel IsVisible="{Binding SelectedView, Converter={StaticResource StringEquals}, ConverterParameter=Groups}"
-                           HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
-                    <TextBlock Classes="LucideIcon" Text="&#57954;" FontSize="64" HorizontalAlignment="Center" Opacity="0.3"/>
-                    <TextBlock Text="Групи" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
-                    <TextBlock Text="Скоро буде..." Classes="Small Muted" HorizontalAlignment="Center"/>
-                </StackPanel>
+                <groupViews:GroupsView IsVisible="{Binding $parent[Panel].DataContext.SelectedView, Converter={StaticResource StringEquals}, ConverterParameter=Groups}"
+                                      DataContext="{Binding GroupsViewModel}"/>
 
-                <StackPanel IsVisible="{Binding SelectedView, Converter={StaticResource StringEquals}, ConverterParameter=Classes}"
-                           HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
-                    <TextBlock Classes="LucideIcon" Text="&#57515;" FontSize="64" HorizontalAlignment="Center" Opacity="0.3"/>
-                    <TextBlock Text="Заняття" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
-                    <TextBlock Text="Скоро буде..." Classes="Small Muted" HorizontalAlignment="Center"/>
-                </StackPanel>
+                <classViews:ClassesView IsVisible="{Binding $parent[Panel].DataContext.SelectedView, Converter={StaticResource StringEquals}, ConverterParameter=Classes}"
+                                       DataContext="{Binding ClassesViewModel}"/>
 
-                <StackPanel IsVisible="{Binding SelectedView, Converter={StaticResource StringEquals}, ConverterParameter=Instructors}"
-                           HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
-                    <TextBlock Classes="LucideIcon" Text="&#58391;" FontSize="64" HorizontalAlignment="Center" Opacity="0.3"/>
-                    <TextBlock Text="Інструктори" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
-                    <TextBlock Text="Скоро буде..." Classes="Small Muted" HorizontalAlignment="Center"/>
-                </StackPanel>
+                <instructorViews:InstructorsView IsVisible="{Binding $parent[Panel].DataContext.SelectedView, Converter={StaticResource StringEquals}, ConverterParameter=Instructors}"
+                                                DataContext="{Binding InstructorsViewModel}"/>
 
                 <StackPanel IsVisible="{Binding SelectedView, Converter={StaticResource StringEquals}, ConverterParameter=Attendance}"
                            HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
