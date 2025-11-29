@@ -1,7 +1,7 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using ReactiveUI;
 
 namespace DanceSchool.Ui.ViewModels;
 
-public class ViewModelBase : ObservableObject
+public abstract class ViewModelBase : ReactiveObject
 {
 }

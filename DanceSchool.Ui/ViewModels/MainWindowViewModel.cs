@@ -1,6 +1,77 @@
-﻿namespace DanceSchool.Ui.ViewModels;
+using System.Collections.ObjectModel;
+using ReactiveUI;
+using ReactiveUI.SourceGenerators;
+using DanceSchool.Ui.Services;
+using DanceSchool.Ui.ViewModels.Students;
+using DanceSchool.Ui.ViewModels.Groups;
+using DanceSchool.Ui.ViewModels.Classes;
+using DanceSchool.Ui.ViewModels.Instructors;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Reactive;
+
+namespace DanceSchool.Ui.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    public string Greeting { get; } = "Welcome to Avalonia!";
+    private readonly IServiceProvider _serviceProvider;
+
+    [Reactive]
+    private string _title = "Танцювальна Школа";
+
+    [Reactive]
+    private string _selectedView = "Dashboard";
+
+    public ObservableCollection<string> MenuItems { get; }
+
+    // ViewModels for different sections
+    public StudentsViewModel StudentsViewModel { get; }
+    public GroupsViewModel GroupsViewModel { get; }
+    public ClassesViewModel ClassesViewModel { get; }
+    public InstructorsViewModel InstructorsViewModel { get; }
+
+    public MainWindowViewModel(IServiceProvider serviceProvider)
+    {
+        _serviceProvider = serviceProvider;
+        
+        // Initialize child ViewModels
+        StudentsViewModel = _serviceProvider.GetRequiredService<StudentsViewModel>();
+        GroupsViewModel = _serviceProvider.GetRequiredService<GroupsViewModel>();
+        ClassesViewModel = _serviceProvider.GetRequiredService<ClassesViewModel>();
+        InstructorsViewModel = _serviceProvider.GetRequiredService<InstructorsViewModel>();
+        
+        MenuItems = new ObservableCollection<string>
+        {
+            "Головна",
+            "Студенти",
+            "Групи", 
+            "Інструктори",
+            "Заняття",
+            "Відвідування",
+            "Студії"
+        };
+    }
+
+    [ReactiveCommand]
+    private void NavigateTo(string view)
+    {
+        SelectedView = view;
+        
+        // Initialize data when navigating to a view
+        switch (view)
+        {
+            case "Students":
+                StudentsViewModel.LoadStudentsCommand.Execute(Unit.Default);
+                break;
+            case "Groups":
+                GroupsViewModel.LoadGroupsCommand.Execute(Unit.Default);
+                break;
+            case "Classes":
+                ClassesViewModel.LoadClassesCommand.Execute(Unit.Default);
+                break;
+            case "Instructors":
+                InstructorsViewModel.LoadInstructorsCommand.Execute(Unit.Default);
+                break;
+        }
+    }
 }
