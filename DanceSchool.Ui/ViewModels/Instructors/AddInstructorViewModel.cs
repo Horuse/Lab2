@@ -13,6 +13,7 @@ namespace DanceSchool.Ui.ViewModels.Instructors
     {
         private readonly InstructorService _instructorService;
         private readonly DialogManager _dialogManager;
+        private int? _instructorId; // null для додавання, id для редагування
 
         [Reactive]
         [Required(ErrorMessage = "Ім'я є обов'язковим")]
@@ -36,6 +37,12 @@ namespace DanceSchool.Ui.ViewModels.Instructors
         [Reactive]
         private DateTime _hireDate = DateTime.Now;
 
+        [Reactive]
+        private string _title = "Додати інструктора";
+
+        [Reactive]
+        private string _submitText = "Додати";
+
         public AddInstructorViewModel(InstructorService instructorService, DialogManager dialogManager)
         {
             _instructorService = instructorService;
@@ -50,17 +57,37 @@ namespace DanceSchool.Ui.ViewModels.Instructors
             
             if (HasErrors) return;
             
-            var instructor = new Instructor
+            if (_instructorId.HasValue)
             {
-                FirstName = FirstName,
-                LastName = LastName,
-                PhoneNumber = PhoneNumber,
-                Email = Email,
-                Specialization = Specialization,
-                HireDate = HireDate
-            };
+                // Редагування існуючого інструктора
+                var instructor = await _instructorService.GetInstructorByIdAsync(_instructorId.Value);
+                if (instructor != null)
+                {
+                    instructor.FirstName = FirstName;
+                    instructor.LastName = LastName;
+                    instructor.PhoneNumber = PhoneNumber;
+                    instructor.Email = Email;
+                    instructor.Specialization = Specialization;
+                    instructor.HireDate = HireDate;
 
-            await _instructorService.CreateInstructorAsync(instructor);
+                    await _instructorService.UpdateInstructorAsync(instructor);
+                }
+            }
+            else
+            {
+                // Додавання нового інструктора
+                var instructor = new Instructor
+                {
+                    FirstName = FirstName,
+                    LastName = LastName,
+                    PhoneNumber = PhoneNumber,
+                    Email = Email,
+                    Specialization = Specialization,
+                    HireDate = HireDate
+                };
+
+                await _instructorService.CreateInstructorAsync(instructor);
+            }
             
             _dialogManager.Close(this, new CloseDialogOptions { Success = true });
         }
@@ -73,12 +100,33 @@ namespace DanceSchool.Ui.ViewModels.Instructors
 
         public void Initialize()
         {
+            _instructorId = null;
             FirstName = string.Empty;
             LastName = string.Empty;
             PhoneNumber = string.Empty;
             Email = string.Empty;
             Specialization = string.Empty;
             HireDate = DateTime.Now;
+            Title = "Додати інструктора";
+            SubmitText = "Додати";
+        }
+
+        public async Task InitializeForEdit(int instructorId)
+        {
+            _instructorId = instructorId;
+            Title = "Редагувати інструктора";
+            SubmitText = "Зберегти";
+            
+            var instructor = await _instructorService.GetInstructorByIdAsync(instructorId);
+            if (instructor != null)
+            {
+                FirstName = instructor.FirstName;
+                LastName = instructor.LastName;
+                PhoneNumber = instructor.PhoneNumber ?? string.Empty;
+                Email = instructor.Email ?? string.Empty;
+                Specialization = instructor.Specialization ?? string.Empty;
+                HireDate = instructor.HireDate;
+            }
         }
     }
 }

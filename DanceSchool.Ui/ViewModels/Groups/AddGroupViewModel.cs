@@ -17,6 +17,7 @@ namespace DanceSchool.Ui.ViewModels.Groups
         private readonly GroupService _groupService;
         private readonly InstructorService _instructorService;
         private readonly DialogManager _dialogManager;
+        private int? _groupId; // null для додавання, id для редагування
 
         [Reactive]
         [Required(ErrorMessage = "Назва групи є обов'язковою")]
@@ -37,6 +38,12 @@ namespace DanceSchool.Ui.ViewModels.Groups
         [Reactive]
         private List<Instructor> _availableInstructors = new();
 
+        [Reactive]
+        private string _title = "Додати групу";
+
+        [Reactive]
+        private string _submitText = "Додати";
+
         public static List<AgeCategory> AgeCategories => Enum.GetValues<AgeCategory>().ToList();
         public static List<SkillLevel> SkillLevels => Enum.GetValues<SkillLevel>().ToList();
 
@@ -55,16 +62,35 @@ namespace DanceSchool.Ui.ViewModels.Groups
             
             if (HasErrors) return;
             
-            var group = new Group
+            if (_groupId.HasValue)
             {
-                Name = Name,
-                AgeCategory = AgeCategory,
-                SkillLevel = SkillLevel,
-                MaxCapacity = MaxCapacity,
-                Schedule = Schedule
-            };
+                // Редагування існуючої групи
+                var group = await _groupService.GetGroupByIdAsync(_groupId.Value);
+                if (group != null)
+                {
+                    group.Name = Name;
+                    group.AgeCategory = AgeCategory;
+                    group.SkillLevel = SkillLevel;
+                    group.MaxCapacity = MaxCapacity;
+                    group.Schedule = Schedule;
 
-            await _groupService.CreateGroupAsync(group);
+                    await _groupService.UpdateGroupAsync(group);
+                }
+            }
+            else
+            {
+                // Додавання нової групи
+                var group = new Group
+                {
+                    Name = Name,
+                    AgeCategory = AgeCategory,
+                    SkillLevel = SkillLevel,
+                    MaxCapacity = MaxCapacity,
+                    Schedule = Schedule
+                };
+
+                await _groupService.CreateGroupAsync(group);
+            }
             
             _dialogManager.Close(this, new CloseDialogOptions { Success = true });
         }
@@ -77,15 +103,39 @@ namespace DanceSchool.Ui.ViewModels.Groups
 
         public async void Initialize()
         {
+            _groupId = null;
             Name = string.Empty;
             AgeCategory = AgeCategory.Kids4_5;
             SkillLevel = SkillLevel.Starter;
             MaxCapacity = 10;
             Schedule = string.Empty;
+            Title = "Додати групу";
+            SubmitText = "Додати";
             
             // Load available instructors
             var instructors = await _instructorService.GetAllInstructorsAsync();
             AvailableInstructors = instructors.ToList();
+        }
+
+        public async Task InitializeForEdit(int groupId)
+        {
+            _groupId = groupId;
+            Title = "Редагувати групу";
+            SubmitText = "Зберегти";
+            
+            // Load available instructors
+            var instructors = await _instructorService.GetAllInstructorsAsync();
+            AvailableInstructors = instructors.ToList();
+            
+            var group = await _groupService.GetGroupByIdAsync(groupId);
+            if (group != null)
+            {
+                Name = group.Name;
+                AgeCategory = group.AgeCategory;
+                SkillLevel = group.SkillLevel;
+                MaxCapacity = group.MaxCapacity;
+                Schedule = group.Schedule ?? string.Empty;
+            }
         }
     }
 }

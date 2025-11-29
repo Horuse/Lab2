@@ -96,7 +96,7 @@
                     <shadui:SidebarItem.Icon>
                         <TextBlock 
                             Classes="LucideIcon"
-                            Text="&#58001;"
+                            Text=""
                             FontSize="16"/>
                     </shadui:SidebarItem.Icon>
                 </shadui:SidebarItem>
@@ -108,7 +108,7 @@
                     <shadui:SidebarItem.Icon>
                         <TextBlock 
                             Classes="LucideIcon"
-                            Text="&#57921;"
+                            Text=""
                             FontSize="16"/>
                     </shadui:SidebarItem.Icon>
                 </shadui:SidebarItem>
@@ -120,7 +120,7 @@
                     <shadui:SidebarItem.Icon>
                         <TextBlock 
                             Classes="LucideIcon"
-                            Text="&#57954;"
+                            Text=""
                             FontSize="16"/>
                     </shadui:SidebarItem.Icon>
                 </shadui:SidebarItem>
@@ -132,7 +132,7 @@
                     <shadui:SidebarItem.Icon>
                         <TextBlock 
                             Classes="LucideIcon"
-                            Text="&#58391;"
+                            Text=""
                             FontSize="16"/>
                     </shadui:SidebarItem.Icon>
                 </shadui:SidebarItem>
@@ -144,7 +144,7 @@
                     <shadui:SidebarItem.Icon>
                         <TextBlock 
                             Classes="LucideIcon"
-                            Text="&#57515;"
+                            Text=""
                             FontSize="16"/>
                     </shadui:SidebarItem.Icon>
                 </shadui:SidebarItem>
@@ -168,7 +168,7 @@
                     <shadui:SidebarItem.Icon>
                         <TextBlock 
                             Classes="LucideIcon"
-                            Text="&#57507;"
+                            Text=""
                             FontSize="16"/>
                     </shadui:SidebarItem.Icon>
                 </shadui:SidebarItem>
@@ -348,7 +348,7 @@
 
                 <StackPanel IsVisible="{Binding SelectedView, Converter={StaticResource StringEquals}, ConverterParameter=Attendance}"
                            HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
-                    <TextBlock Classes="LucideIcon" Text="&#57456;" FontSize="64" HorizontalAlignment="Center" Opacity="0.3"/>
+                    <TextBlock Classes="LucideIcon" Text="" FontSize="64" HorizontalAlignment="Center" Opacity="0.3"/>
                     <TextBlock Text="Відвідування" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
                     <TextBlock Text="Цей розділ в розробці" Classes="Small Muted" HorizontalAlignment="Center"/>
                 </StackPanel>

@@ -10,8 +10,8 @@
 
     <StackPanel Spacing="24" Margin="24">
         <StackPanel Spacing="8">
-            <TextBlock Text="Додати студента" Classes="h3" FontWeight="Bold" />
-            <TextBlock Text="Заповніть дані нового студента" Classes="Small Muted" />
+            <TextBlock Text="{Binding Title}" Classes="h3" FontWeight="Bold" />
+            <TextBlock Text="Заповніть дані студента" Classes="Small Muted" />
         </StackPanel>
         
         <StackPanel Spacing="16">
@@ -62,7 +62,7 @@
         <!-- Footer with buttons -->
         <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right" Margin="0,16,0,0">
             <Button Classes="Outline" Command="{Binding CancelCommand}">Скасувати</Button>
-            <Button Classes="Primary" Command="{Binding SubmitCommand}">Додати</Button>
+            <Button Classes="Primary" Command="{Binding SubmitCommand}" Content="{Binding SubmitText}" />
         </StackPanel>
     </StackPanel>
 </UserControl>

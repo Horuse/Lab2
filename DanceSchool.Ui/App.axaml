@@ -10,7 +10,12 @@
         <local:ViewLocator/>
     </Application.DataTemplates>
   
-    <Application.Styles>
-        <themes:ShadTheme />
-    </Application.Styles>
+     <Application.Resources>
+         <FontFamily x:Key="LucideIcon">avares://DanceSchool.Ui/Assets/Fonts#lucide</FontFamily>
+     </Application.Resources>
+             
+     <Application.Styles>
+         <themes:ShadTheme />
+         <StyleInclude Source="avares://DanceSchool.Ui/Styles/Index.axaml" />
+     </Application.Styles>
 </Application>

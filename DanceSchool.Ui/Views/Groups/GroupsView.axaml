@@ -4,97 +4,157 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              xmlns:vm="using:DanceSchool.Ui.ViewModels.Groups"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DanceSchool.Ui.Views.Groups.GroupsView"
              x:DataType="vm:GroupsViewModel">
 
-    <StackPanel Spacing="24">
-        <!-- Header with Add button -->
-        <Grid ColumnDefinitions="*,Auto">
-            <StackPanel Grid.Column="0" Spacing="8">
-                <TextBlock Text="Групи" Classes="h2" />
-                <TextBlock Text="Управління групами танцювальної школи" Classes="Small Muted" />
-            </StackPanel>
-            <Button Grid.Column="1" 
-                    Classes="Primary" 
-                    Command="{Binding AddGroupCommand}">
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <TextBlock Classes="LucideIcon" Text="&#57665;" FontSize="16" />
-                    <TextBlock Text="Додати групу" />
+    <ScrollViewer HorizontalScrollBarVisibility="Auto">
+        <StackPanel HorizontalAlignment="Center" Spacing="16" Width="1100">
+            <Grid ColumnDefinitions="* Auto">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="16">
+                    <Button Classes="Primary" Command="{Binding LoadGroupsCommand}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Classes="LucideIcon" Text="&#57732;" FontSize="16"/>
+                            <TextBlock Text="Оновити"/>
+                        </StackPanel>
+                    </Button>
+                    
+                    <Button Classes="Secondary" Command="{Binding AddGroupCommand}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Classes="LucideIcon" Text="&#57665;" FontSize="16"/>
+                            <TextBlock Text="Додати групу"/>
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
-            </Button>
-        </Grid>
 
-        <!-- Groups List -->
-        <shadui:Card HasShadow="True">
-            <shadui:Card.Header>
-                <StackPanel>
-                    <shadui:CardTitle>Список груп</shadui:CardTitle>
-                    <shadui:CardDescription>Усі групи в танцювальній школі</shadui:CardDescription>
-                </StackPanel>
-            </shadui:Card.Header>
-            
-            <ScrollViewer>
-                <ItemsControl ItemsSource="{Binding Groups}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="vm:GroupItemViewModel">
-                            <Border BorderBrush="{DynamicResource BorderColor}" 
-                                    BorderThickness="0,0,0,1" 
-                                    Padding="16,12">
-                                <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="16">
-                                    <StackPanel Grid.Column="0" Spacing="4">
-                                        <TextBlock Text="{Binding Name}" 
-                                                   FontWeight="Medium" 
-                                                   FontSize="16" />
-                                        <StackPanel Orientation="Horizontal" Spacing="16">
-                                            <TextBlock Classes="Small Muted">
-                                                <Run Text="Інструктори:" />
-                                                <Run Text="{Binding InstructorsNames}" />
-                                            </TextBlock>
-                                            <TextBlock Classes="Small Muted">
-                                                <Run Text="Студентів:" />
-                                                <Run Text="{Binding StudentsCount}" />
-                                                <Run Text="/" />
-                                                <Run Text="{Binding MaxCapacity}" />
-                                            </TextBlock>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="16">
-                                            <TextBlock Classes="Small Muted">
-                                                <Run Text="Вік:" />
-                                                <Run Text="{Binding AgeCategory}" />
-                                            </TextBlock>
-                                            <TextBlock Classes="Small Muted">
-                                                <Run Text="Рівень:" />
-                                                <Run Text="{Binding SkillLevel}" />
-                                            </TextBlock>
-                                        </StackPanel>
-                                    </StackPanel>
-                                    
-                                    <TextBlock Grid.Column="1" 
-                                               Classes="Small Muted" 
-                                               Text="{Binding Schedule}" 
-                                               VerticalAlignment="Center" />
-                                    
-                                    <Border Grid.Column="2" />
-                                    
-                                    <StackPanel Grid.Column="3" 
-                                                Orientation="Horizontal" 
-                                                Spacing="8">
-                                        <Button Classes="Ghost Icon" 
-                                                ToolTip.Tip="Редагувати">
+                <TextBox Grid.Column="1"
+                         Classes="Clearable"
+                         Width="250" 
+                         Watermark="Пошук груп..."
+                         shadui:ControlAssist.ShowProgress="{Binding IsLoading}">
+                    <TextBox.InnerRightContent>
+                        <PathIcon Data="{x:Static shadui:Icons.Search}" 
+                                  Opacity="0.75" 
+                                  Width="16"/>
+                    </TextBox.InnerRightContent>
+                </TextBox>
+            </Grid>
+
+            <DataGrid CanUserReorderColumns="False"
+                      CanUserSortColumns="True"
+                      GridLinesVisibility="Horizontal"
+                      ItemsSource="{Binding Groups}"
+                      SelectionMode="Single"
+                      x:Name="DataGrid">
+                
+                <DataGrid.Columns>
+                    <DataGridCheckBoxColumn Binding="{Binding IsSelected}" CanUserSort="False">
+                        <DataGridCheckBoxColumn.Header>
+                            <CheckBox x:Name="SelectToggler" />
+                        </DataGridCheckBoxColumn.Header>
+                    </DataGridCheckBoxColumn>
+
+                    <DataGridTextColumn Header="Назва" 
+                                        Binding="{Binding Name}" 
+                                        Width="*"
+                                        MinWidth="120"/>
+                    
+                    <DataGridTextColumn Header="Інструктори" 
+                                        Binding="{Binding InstructorsNames}" 
+                                        Width="*"
+                                        MinWidth="150"/>
+                    
+                    <DataGridTextColumn Header="Студентів" 
+                                        Binding="{Binding StudentsCount}" 
+                                        Width="80"/>
+                    
+                    <DataGridTextColumn Header="Макс. місць" 
+                                        Binding="{Binding MaxCapacity}" 
+                                        Width="90"/>
+                    
+                    <DataGridTextColumn Header="Вік" 
+                                        Binding="{Binding AgeCategory}" 
+                                        Width="*"
+                                        MinWidth="100"/>
+                    
+                    <DataGridTextColumn Header="Рівень" 
+                                        Binding="{Binding SkillLevel}" 
+                                        Width="*"
+                                        MinWidth="120"/>
+
+                    <DataGridTemplateColumn CanUserResize="False" CanUserSort="False" Header="Дії">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <shadui:SimpleDropdown Classes="Icon Grid"
+                                                       CornerRadius="{DynamicResource MdCornerRadius}"
+                                                       HorizontalAlignment="Center"
+                                                       PopupPlacement="BottomEdgeAlignedLeft"
+                                                       PopupWidth="190"
+                                                       VerticalAlignment="Center">
+                                    <shadui:SimpleDropdown.TriggerContent>
+                                        <TextBlock Classes="LucideIcon" Text="&#57530;" />
+                                    </shadui:SimpleDropdown.TriggerContent>
+                                    <shadui:SimpleDropdown.MenuLabel>
+                                        <TextBlock Classes="Caption Muted" Text="Дії" />
+                                    </shadui:SimpleDropdown.MenuLabel>
+                                    <Separator />
+                                    <Button Content="Редагувати групу"
+                                            Command="{Binding $parent[UserControl].((vm:GroupsViewModel)DataContext).EditGroupCommand}"
+                                            CommandParameter="{Binding Id}">
+                                        <shadui:ButtonAssist.Icon>
                                             <TextBlock Classes="LucideIcon" Text="&#57849;" />
-                                        </Button>
-                                        <Button Classes="Ghost Icon" 
-                                                ToolTip.Tip="Видалити">
+                                        </shadui:ButtonAssist.Icon>
+                                    </Button>
+                                    <Button Content="Переглянути студентів">
+                                        <shadui:ButtonAssist.Icon>
+                                            <TextBlock Classes="LucideIcon" Text="&#57921;" />
+                                        </shadui:ButtonAssist.Icon>
+                                    </Button>
+                                    <Button Content="Розклад занять">
+                                        <shadui:ButtonAssist.Icon>
+                                            <TextBlock Classes="LucideIcon" Text="&#57515;" />
+                                        </shadui:ButtonAssist.Icon>
+                                    </Button>
+                                    <Separator />
+                                    <Button Classes="DestructiveMenu" 
+                                            Content="Видалити групу"
+                                            Command="{Binding $parent[UserControl].((vm:GroupsViewModel)DataContext).DeleteGroupCommand}"
+                                            CommandParameter="{Binding Id}">
+                                        <shadui:ButtonAssist.Icon>
                                             <TextBlock Classes="LucideIcon" Text="&#57741;" />
-                                        </Button>
-                                    </StackPanel>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
-        </shadui:Card>
-    </StackPanel>
+                                        </shadui:ButtonAssist.Icon>
+                                    </Button>
+                                </shadui:SimpleDropdown>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Grid ColumnDefinitions="* Auto">
+                <TextBlock Classes="Small Muted" VerticalAlignment="Center">
+                    <Run Text="{Binding Groups.Count}" />
+                    <Run Text="груп всього" />
+                </TextBlock>
+                <StackPanel Grid.Column="1" 
+                            Orientation="Horizontal" 
+                            Spacing="8">
+                    <Button Classes="Outline" IsEnabled="False">Попередня</Button>
+                    <Button Classes="Outline" IsEnabled="False">Наступна</Button>
+                </StackPanel>
+            </Grid>
+
+            <Border IsVisible="{Binding IsLoading}" 
+                    Background="{DynamicResource CardBackgroundColor}"
+                    CornerRadius="8"
+                    Padding="32"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
+                    <ProgressBar IsIndeterminate="True" Width="200" Height="4"/>
+                    <TextBlock Text="Завантаження груп..." Classes="Small"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

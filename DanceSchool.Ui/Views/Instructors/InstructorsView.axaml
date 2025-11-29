@@ -109,7 +109,9 @@
                                         <TextBlock Classes="Caption Muted" Text="Дії" />
                                     </shadui:SimpleDropdown.MenuLabel>
                                     <Separator />
-                                    <Button Content="Редагувати інструктора">
+                                    <Button Content="Редагувати інструктора"
+                                            Command="{Binding $parent[UserControl].((vm:InstructorsViewModel)DataContext).EditInstructorCommand}"
+                                            CommandParameter="{Binding Id}">
                                         <shadui:ButtonAssist.Icon>
                                             <TextBlock Classes="LucideIcon" Text="&#57849;" />
                                         </shadui:ButtonAssist.Icon>

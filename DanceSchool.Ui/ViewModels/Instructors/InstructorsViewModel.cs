@@ -76,6 +76,21 @@ namespace DanceSchool.Ui.ViewModels.Instructors
         }
 
         [ReactiveCommand]
+        private async Task EditInstructor(int id)
+        {
+            var addInstructorViewModel = _serviceProvider.GetRequiredService<AddInstructorViewModel>();
+            await addInstructorViewModel.InitializeForEdit(id);
+            
+            _dialogManager.CreateDialog(addInstructorViewModel)
+                .Dismissible()
+                .WithSuccessCallback(async vm =>
+                {
+                    await LoadInstructors();
+                })
+                .Show();
+        }
+
+        [ReactiveCommand]
         private async Task DeleteInstructorAsync(int id)
         {
             await _instructorService.DeleteInstructorAsync(id);

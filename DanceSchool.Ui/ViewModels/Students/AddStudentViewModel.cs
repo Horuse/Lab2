@@ -17,6 +17,7 @@ namespace DanceSchool.Ui.ViewModels.Students
     {
         private readonly StudentService _studentService;
         private readonly DialogManager _dialogManager;
+        private int? _studentId; // null для додавання, id для редагування
 
         [Reactive]
         [Required(ErrorMessage = "Ім'я є обов'язковим")]
@@ -42,6 +43,12 @@ namespace DanceSchool.Ui.ViewModels.Students
         [Required(ErrorMessage = "Рівень навичок є обов'язковим")]
         private SkillLevel _skillLevel = SkillLevel.Starter;
 
+        [Reactive]
+        private string _title = "Додати студента";
+
+        [Reactive]
+        private string _submitText = "Додати";
+
         public static List<SkillLevel> SkillLevels => new()
         {
             SkillLevel.Starter,
@@ -60,22 +67,41 @@ namespace DanceSchool.Ui.ViewModels.Students
         {
             ClearAllErrors();
             ValidateAllProperties();
-            // if (string.IsNullOrWhiteSpace(FirstName) || string.IsNullOrWhiteSpace(LastName))
                 
             if (HasErrors) return;
             
-            var student = new Student
+            if (_studentId.HasValue)
             {
-                FirstName = FirstName,
-                LastName = LastName,
-                DateOfBirth = DateOfBirth,
-                PhoneNumber = PhoneNumber,
-                Email = Email,
-                SkillLevel = SkillLevel,
-                RegistrationDate = DateTime.Now
-            };
+                // Редагування існуючого студента
+                var student = await _studentService.GetStudentByIdAsync(_studentId.Value);
+                if (student != null)
+                {
+                    student.FirstName = FirstName;
+                    student.LastName = LastName;
+                    student.DateOfBirth = DateOfBirth;
+                    student.PhoneNumber = PhoneNumber;
+                    student.Email = Email;
+                    student.SkillLevel = SkillLevel;
 
-            await _studentService.CreateStudentAsync(student);
+                    await _studentService.UpdateStudentAsync(student);
+                }
+            }
+            else
+            {
+                // Додавання нового студента
+                var student = new Student
+                {
+                    FirstName = FirstName,
+                    LastName = LastName,
+                    DateOfBirth = DateOfBirth,
+                    PhoneNumber = PhoneNumber,
+                    Email = Email,
+                    SkillLevel = SkillLevel,
+                    RegistrationDate = DateTime.Now
+                };
+
+                await _studentService.CreateStudentAsync(student);
+            }
             
             _dialogManager.Close(this, new CloseDialogOptions { Success = true });
         }
@@ -88,12 +114,33 @@ namespace DanceSchool.Ui.ViewModels.Students
 
         public void Initialize()
         {
+            _studentId = null;
             FirstName = string.Empty;
             LastName = string.Empty;
             DateOfBirth = DateTime.Now.AddYears(-18);
             PhoneNumber = string.Empty;
             Email = string.Empty;
             SkillLevel = SkillLevel.Starter;
+            Title = "Додати студента";
+            SubmitText = "Додати";
+        }
+
+        public async Task InitializeForEdit(int studentId)
+        {
+            _studentId = studentId;
+            Title = "Редагувати студента";
+            SubmitText = "Зберегти";
+            
+            var student = await _studentService.GetStudentByIdAsync(studentId);
+            if (student != null)
+            {
+                FirstName = student.FirstName;
+                LastName = student.LastName;
+                DateOfBirth = student.DateOfBirth;
+                PhoneNumber = student.PhoneNumber ?? string.Empty;
+                Email = student.Email ?? string.Empty;
+                SkillLevel = student.SkillLevel;
+            }
         }
     }
 }

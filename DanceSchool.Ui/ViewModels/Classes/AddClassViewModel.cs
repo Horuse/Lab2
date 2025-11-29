@@ -20,6 +20,7 @@ namespace DanceSchool.Ui.ViewModels.Classes
         private readonly InstructorService _instructorService;
         private readonly StudioService _studioService;
         private readonly DialogManager _dialogManager;
+        private int? _classId; // null для додавання, id для редагування
 
         [Required(ErrorMessage = "Дата є обов'язковою")]
         [Reactive]
@@ -58,6 +59,12 @@ namespace DanceSchool.Ui.ViewModels.Classes
         [Reactive]
         private bool _isLoading;
 
+        [Reactive]
+        private string _title = "Додати заняття";
+
+        [Reactive]
+        private string _submitText = "Додати";
+
         public ObservableCollection<Group> Groups { get; } = new();
         public ObservableCollection<Instructor> Instructors { get; } = new();
         public ObservableCollection<Studio> Studios { get; } = new();
@@ -83,7 +90,32 @@ namespace DanceSchool.Ui.ViewModels.Classes
 
         public async void Initialize()
         {
+            _classId = null;
+            Title = "Додати заняття";
+            SubmitText = "Додати";
             await LoadDataAsync();
+        }
+
+        public async Task InitializeForEdit(int classId)
+        {
+            _classId = classId;
+            Title = "Редагувати заняття";
+            SubmitText = "Зберегти";
+            
+            await LoadDataAsync();
+            
+            var classItem = await _classService.GetClassByIdAsync(classId);
+            if (classItem != null)
+            {
+                Date = classItem.Date;
+                StartTime = classItem.StartTime;
+                EndTime = classItem.EndTime;
+                ClassType = classItem.ClassType;
+                Topic = classItem.Topic;
+                SelectedGroup = Groups.FirstOrDefault(g => g.Id == classItem.GroupId);
+                SelectedInstructor = Instructors.FirstOrDefault(i => i.Id == classItem.InstructorId);
+                SelectedStudio = Studios.FirstOrDefault(s => s.Id == classItem.StudioId);
+            }
         }
 
         private async Task LoadDataAsync()
@@ -129,26 +161,48 @@ namespace DanceSchool.Ui.ViewModels.Classes
 
             try
             {
-                var newClass = new Class
+                if (_classId.HasValue)
                 {
-                    Date = Date,
-                    StartTime = StartTime,
-                    EndTime = EndTime,
-                    ClassType = ClassType,
-                    Topic = Topic,
-                    GroupId = SelectedGroup!.Id,
-                    InstructorId = SelectedInstructor!.Id,
-                    StudioId = SelectedStudio!.Id
-                };
+                    // Редагування існуючого заняття
+                    var classItem = await _classService.GetClassByIdAsync(_classId.Value);
+                    if (classItem != null)
+                    {
+                        classItem.Date = Date;
+                        classItem.StartTime = StartTime;
+                        classItem.EndTime = EndTime;
+                        classItem.ClassType = ClassType;
+                        classItem.Topic = Topic;
+                        classItem.GroupId = SelectedGroup!.Id;
+                        classItem.InstructorId = SelectedInstructor!.Id;
+                        classItem.StudioId = SelectedStudio!.Id;
 
-                var success = await _classService.CreateClassAsync(newClass);
-                if (success)
-                {
-                    _dialogManager.Close(this, new CloseDialogOptions { Success = true });
+                        var success = await _classService.UpdateClassAsync(classItem);
+                        if (success)
+                        {
+                            _dialogManager.Close(this, new CloseDialogOptions { Success = true });
+                        }
+                    }
                 }
                 else
                 {
-                    // SetError(nameof(Date), "Конфлікт розкладу: студія або інструктор зайняті в цей час");
+                    // Додавання нового заняття
+                    var newClass = new Class
+                    {
+                        Date = Date,
+                        StartTime = StartTime,
+                        EndTime = EndTime,
+                        ClassType = ClassType,
+                        Topic = Topic,
+                        GroupId = SelectedGroup!.Id,
+                        InstructorId = SelectedInstructor!.Id,
+                        StudioId = SelectedStudio!.Id
+                    };
+
+                    var success = await _classService.CreateClassAsync(newClass);
+                    if (success)
+                    {
+                        _dialogManager.Close(this, new CloseDialogOptions { Success = true });
+                    }
                 }
             }
             catch (Exception ex)

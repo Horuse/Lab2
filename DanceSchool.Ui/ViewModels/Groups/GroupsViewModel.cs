@@ -75,6 +75,21 @@ namespace DanceSchool.Ui.ViewModels.Groups
         }
 
         [ReactiveCommand]
+        private async Task EditGroup(int id)
+        {
+            var addGroupViewModel = _serviceProvider.GetRequiredService<AddGroupViewModel>();
+            await addGroupViewModel.InitializeForEdit(id);
+            
+            _dialogManager.CreateDialog(addGroupViewModel)
+                .Dismissible()
+                .WithSuccessCallback(async vm =>
+                {
+                    await LoadGroups();
+                })
+                .Show();
+        }
+
+        [ReactiveCommand]
         private async Task DeleteGroupAsync(int id)
         {
             await _groupService.DeleteGroupAsync(id);
