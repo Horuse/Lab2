@@ -9,6 +9,7 @@ using DanceSchool.Ui.Models;
 using DanceSchool.Ui.Services;
 using ShadUI;
 using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
 
 namespace DanceSchool.Ui.ViewModels.Students
 {
@@ -22,16 +23,25 @@ namespace DanceSchool.Ui.ViewModels.Students
         private ObservableCollection<StudentItem> _students = new();
 
         [Reactive]
+        private ObservableCollection<StudentItem> _filteredStudents = new();
+
+        [Reactive]
         private StudentItem? _selectedStudent;
 
         [Reactive]
         private bool _isLoading;
+
+        [Reactive]
+        private string _searchText = string.Empty;
 
         public StudentsViewModel(StudentService studentService, DialogManager dialogManager, IServiceProvider serviceProvider)
         {
             _studentService = studentService;
             _dialogManager = dialogManager;
             _serviceProvider = serviceProvider;
+
+            this.WhenAnyValue(x => x.SearchText)
+                .Subscribe(_ => FilterStudents());
         }
 
         [ReactiveCommand]
@@ -46,10 +56,38 @@ namespace DanceSchool.Ui.ViewModels.Students
                 {
                     Students.Add(StudentItem.FromStudent(student));
                 }
+                FilterStudents();
             }
             finally
             {
                 IsLoading = false;
+            }
+        }
+
+        private void FilterStudents()
+        {
+            FilteredStudents.Clear();
+            
+            if (string.IsNullOrWhiteSpace(SearchText))
+            {
+                foreach (var student in Students)
+                {
+                    FilteredStudents.Add(student);
+                }
+            }
+            else
+            {
+                var searchLower = SearchText.ToLowerInvariant();
+                var filtered = Students.Where(s => 
+                    (s.FirstName?.ToLowerInvariant().Contains(searchLower) ?? false) ||
+                    (s.LastName?.ToLowerInvariant().Contains(searchLower) ?? false) ||
+                    (s.Email?.ToLowerInvariant().Contains(searchLower) ?? false) ||
+                    (s.PhoneNumber?.Contains(SearchText) ?? false));
+                
+                foreach (var student in filtered)
+                {
+                    FilteredStudents.Add(student);
+                }
             }
         }
 

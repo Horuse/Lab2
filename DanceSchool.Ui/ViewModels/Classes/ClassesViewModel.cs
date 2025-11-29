@@ -20,16 +20,25 @@ namespace DanceSchool.Ui.ViewModels.Classes
         public ObservableCollection<ClassItemViewModel> Classes { get; } = new();
 
         [Reactive]
+        private ObservableCollection<ClassItemViewModel> _filteredClasses = new();
+
+        [Reactive]
         private bool _isLoading;
 
         [Reactive]
         private DateTime _selectedDate = DateTime.Today;
+
+        [Reactive]
+        private string _searchText = string.Empty;
 
         public ClassesViewModel(ClassService classService, DialogManager dialogManager, IServiceProvider serviceProvider)
         {
             _classService = classService;
             _dialogManager = dialogManager;
             _serviceProvider = serviceProvider;
+
+            this.WhenAnyValue(x => x.SearchText)
+                .Subscribe(_ => FilterClasses());
         }
 
         [ReactiveCommand]
@@ -74,10 +83,39 @@ namespace DanceSchool.Ui.ViewModels.Classes
                         AttendanceCount = classItem.Attendances?.Count ?? 0
                     });
                 }
+                FilterClasses();
             }
             finally
             {
                 IsLoading = false;
+            }
+        }
+
+        private void FilterClasses()
+        {
+            FilteredClasses.Clear();
+            
+            if (string.IsNullOrWhiteSpace(SearchText))
+            {
+                foreach (var classItem in Classes)
+                {
+                    FilteredClasses.Add(classItem);
+                }
+            }
+            else
+            {
+                var searchLower = SearchText.ToLowerInvariant();
+                var filtered = Classes.Where(c => 
+                    (c.Topic?.ToLowerInvariant().Contains(searchLower) ?? false) ||
+                    (c.GroupName?.ToLowerInvariant().Contains(searchLower) ?? false) ||
+                    (c.InstructorName?.ToLowerInvariant().Contains(searchLower) ?? false) ||
+                    (c.StudioName?.ToLowerInvariant().Contains(searchLower) ?? false) ||
+                    c.ClassType.ToString().ToLowerInvariant().Contains(searchLower));
+                
+                foreach (var classItem in filtered)
+                {
+                    FilteredClasses.Add(classItem);
+                }
             }
         }
 

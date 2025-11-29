@@ -182,38 +182,17 @@
                 BorderThickness="0,0,0,1"
                 BorderBrush="{DynamicResource BorderColor}"
                 Padding="24,16">
-                <Grid ColumnDefinitions="*,Auto">
-                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                        <TextBlock 
-                            Text="{Binding SelectedView}"
-                            FontSize="24"
-                            FontWeight="Bold"
-                            Classes="h2"/>
-                        <TextBlock 
-                            Text="Ефективно керуйте своєю танцювальною школою"
-                            Classes="Small Muted"
-                            Margin="0,4,0,0"/>
-                    </StackPanel>
-                    
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12">
-                        <Button 
-                            Classes="Ghost Icon"
-                            ToolTip.Tip="Сповіщення">
-                            <TextBlock 
-                                Classes="LucideIcon"
-                                Text="&#57437;"
-                                FontSize="18"/>
-                        </Button>
-                        <Button 
-                            Classes="Ghost Icon"
-                            ToolTip.Tip="Налаштування">
-                            <TextBlock 
-                                Classes="LucideIcon"
-                                Text="&#57680;"
-                                FontSize="18"/>
-                        </Button>
-                    </StackPanel>
-                </Grid>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock 
+                        Text="{Binding SelectedView}"
+                        FontSize="24"
+                        FontWeight="Bold"
+                        Classes="h2"/>
+                    <TextBlock 
+                        Text="Ефективно керуйте своєю танцювальною школою"
+                        Classes="Small Muted"
+                        Margin="0,4,0,0"/>
+                </StackPanel>
             </Border>
 
             <Panel Margin="24">

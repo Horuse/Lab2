@@ -20,13 +20,22 @@ namespace DanceSchool.Ui.ViewModels.Groups
         public ObservableCollection<GroupItemViewModel> Groups { get; } = new();
 
         [Reactive]
+        private ObservableCollection<GroupItemViewModel> _filteredGroups = new();
+
+        [Reactive]
         private bool _isLoading;
+
+        [Reactive]
+        private string _searchText = string.Empty;
 
         public GroupsViewModel(GroupService groupService, DialogManager dialogManager, IServiceProvider serviceProvider)
         {
             _groupService = groupService;
             _dialogManager = dialogManager;
             _serviceProvider = serviceProvider;
+
+            this.WhenAnyValue(x => x.SearchText)
+                .Subscribe(_ => FilterGroups());
         }
 
         [ReactiveCommand]
@@ -67,10 +76,38 @@ namespace DanceSchool.Ui.ViewModels.Groups
                         MaxCapacity = group.MaxCapacity
                     });
                 }
+                FilterGroups();
             }
             finally
             {
                 IsLoading = false;
+            }
+        }
+
+        private void FilterGroups()
+        {
+            FilteredGroups.Clear();
+            
+            if (string.IsNullOrWhiteSpace(SearchText))
+            {
+                foreach (var group in Groups)
+                {
+                    FilteredGroups.Add(group);
+                }
+            }
+            else
+            {
+                var searchLower = SearchText.ToLowerInvariant();
+                var filtered = Groups.Where(g => 
+                    (g.Name?.ToLowerInvariant().Contains(searchLower) ?? false) ||
+                    (g.InstructorsNames?.ToLowerInvariant().Contains(searchLower) ?? false) ||
+                    g.AgeCategory.ToString().ToLowerInvariant().Contains(searchLower) ||
+                    g.SkillLevel.ToString().ToLowerInvariant().Contains(searchLower));
+                
+                foreach (var group in filtered)
+                {
+                    FilteredGroups.Add(group);
+                }
             }
         }
 

@@ -31,6 +31,7 @@
                          Classes="Clearable"
                          Width="250" 
                          Watermark="Пошук інструкторів..."
+                         Text="{Binding SearchText}"
                          shadui:ControlAssist.ShowProgress="{Binding IsLoading}">
                     <TextBox.InnerRightContent>
                         <PathIcon Data="{x:Static shadui:Icons.Search}" 
@@ -43,7 +44,7 @@
             <DataGrid CanUserReorderColumns="False"
                       CanUserSortColumns="True"
                       GridLinesVisibility="Horizontal"
-                      ItemsSource="{Binding Instructors}"
+                      ItemsSource="{Binding FilteredInstructors}"
                       SelectionMode="Single"
                       x:Name="DataGrid">
                 
@@ -142,18 +143,10 @@
                 </DataGrid.Columns>
             </DataGrid>
 
-            <Grid ColumnDefinitions="* Auto">
-                <TextBlock Classes="Small Muted" VerticalAlignment="Center">
-                    <Run Text="{Binding Instructors.Count}" />
-                    <Run Text="інструкторів всього" />
-                </TextBlock>
-                <StackPanel Grid.Column="1" 
-                            Orientation="Horizontal" 
-                            Spacing="8">
-                    <Button Classes="Outline" IsEnabled="False">Попередня</Button>
-                    <Button Classes="Outline" IsEnabled="False">Наступна</Button>
-                </StackPanel>
-            </Grid>
+            <TextBlock Classes="Small Muted" VerticalAlignment="Center">
+                <Run Text="{Binding FilteredInstructors.Count}" />
+                <Run Text="інструкторів знайдено" />
+            </TextBlock>
 
             <Border IsVisible="{Binding IsLoading}" 
                     Background="{DynamicResource CardBackgroundColor}"
