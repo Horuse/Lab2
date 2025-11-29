@@ -1,0 +1,158 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             xmlns:vm="using:DanceSchool.Ui.ViewModels.Students"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="DanceSchool.Ui.Views.Students.StudentsView"
+             x:DataType="vm:StudentsViewModel">
+
+    <ScrollViewer HorizontalScrollBarVisibility="Auto">
+        <StackPanel HorizontalAlignment="Center" Spacing="16" Width="800">
+            <Grid ColumnDefinitions="* Auto">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="16">
+                    <Button Classes="Primary" Command="{Binding LoadStudentsCommand}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Classes="LucideIcon" Text="&#57732;" FontSize="16"/>
+                            <TextBlock Text="Оновити"/>
+                        </StackPanel>
+                    </Button>
+                    
+                    <Button Classes="Secondary" Command="{Binding AddStudentCommand}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Classes="LucideIcon" Text="&#57665;" FontSize="16"/>
+                            <TextBlock Text="Додати студента"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <TextBox Grid.Column="1"
+                         Classes="Clearable"
+                         Width="250" 
+                         Watermark="Пошук студентів..."
+                         shadui:ControlAssist.ShowProgress="{Binding IsLoading}">
+                    <TextBox.InnerRightContent>
+                        <PathIcon Data="{x:Static shadui:Icons.Search}" 
+                                  Opacity="0.75" 
+                                  Width="16"/>
+                    </TextBox.InnerRightContent>
+                </TextBox>
+            </Grid>
+
+            <DataGrid CanUserReorderColumns="False"
+                      CanUserSortColumns="True"
+                      GridLinesVisibility="Horizontal"
+                      ItemsSource="{Binding Students}"
+                      SelectionMode="Single"
+                      x:Name="DataGrid">
+                
+                <DataGrid.Columns>
+                    <DataGridCheckBoxColumn Binding="{Binding IsSelected}" CanUserSort="False">
+                        <DataGridCheckBoxColumn.Header>
+                            <CheckBox x:Name="SelectToggler" />
+                        </DataGridCheckBoxColumn.Header>
+                    </DataGridCheckBoxColumn>
+
+                    <DataGridTextColumn Header="Ім'я" 
+                                        Binding="{Binding FirstName}" 
+                                        Width="*"
+                                        MinWidth="120"/>
+                    
+                    <DataGridTextColumn Header="Прізвище" 
+                                        Binding="{Binding LastName}" 
+                                        Width="*"
+                                        MinWidth="120"/>
+                    
+                    <DataGridTextColumn Header="Дата народження" 
+                                        Binding="{Binding DateOfBirth, StringFormat=dd/MM/yyyy}" 
+                                        Width="120"
+                                        IsReadOnly="True"/>
+                    
+                    <DataGridTextColumn Header="Телефон" 
+                                        Binding="{Binding PhoneNumber}" 
+                                        Width="120"/>
+                    
+                    <DataGridTextColumn Header="Email" 
+                                        Binding="{Binding Email, Mode=TwoWay}" 
+                                        Width="*"
+                                        MinWidth="150"/>
+                    
+                    <DataGridTextColumn Header="Рівень навичок" 
+                                        Binding="{Binding SkillLevel}" 
+                                        Width="120"
+                                        IsReadOnly="True"/>
+                    <DataGridTemplateColumn CanUserResize="False" CanUserSort="False" Header="Дії">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <shadui:SimpleDropdown Classes="Icon Grid"
+                                                       CornerRadius="{DynamicResource MdCornerRadius}"
+                                                       HorizontalAlignment="Center"
+                                                       PopupPlacement="BottomEdgeAlignedLeft"
+                                                       PopupWidth="190"
+                                                       VerticalAlignment="Center">
+                                    <shadui:SimpleDropdown.TriggerContent>
+                                        <TextBlock Classes="LucideIcon" Text="&#57530;" />
+                                    </shadui:SimpleDropdown.TriggerContent>
+                                    <shadui:SimpleDropdown.MenuLabel>
+                                        <TextBlock Classes="Caption Muted" Text="Дії" />
+                                    </shadui:SimpleDropdown.MenuLabel>
+                                    <Separator />
+                                    <Button Content="Редагувати студента">
+                                        <shadui:ButtonAssist.Icon>
+                                            <TextBlock Classes="LucideIcon" Text="&#57849;" />
+                                        </shadui:ButtonAssist.Icon>
+                                    </Button>
+                                    <Button Content="Переглянути групи">
+                                        <shadui:ButtonAssist.Icon>
+                                            <TextBlock Classes="LucideIcon" Text="&#57954;" />
+                                        </shadui:ButtonAssist.Icon>
+                                    </Button>
+                                    <Button Content="Відвідування">
+                                        <shadui:ButtonAssist.Icon>
+                                            <TextBlock Classes="LucideIcon" Text="&#57456;" />
+                                        </shadui:ButtonAssist.Icon>
+                                    </Button>
+                                    <Separator />
+                                    <Button Classes="DestructiveMenu" 
+                                            Content="Видалити студента"
+                                            Command="{Binding $parent[UserControl].((vm:StudentsViewModel)DataContext).DeleteStudentCommand}"
+                                            CommandParameter="{Binding Id}">
+                                        <shadui:ButtonAssist.Icon>
+                                            <TextBlock Classes="LucideIcon" Text="&#57741;" />
+                                        </shadui:ButtonAssist.Icon>
+                                    </Button>
+                                </shadui:SimpleDropdown>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Grid ColumnDefinitions="* Auto">
+                <TextBlock Classes="Small Muted" VerticalAlignment="Center">
+                    <Run Text="{Binding Students.Count}" />
+                    <Run Text="студентів всього" />
+                </TextBlock>
+                <StackPanel Grid.Column="1" 
+                            Orientation="Horizontal" 
+                            Spacing="8">
+                    <Button Classes="Outline" IsEnabled="False">Попередня</Button>
+                    <Button Classes="Outline" IsEnabled="False">Наступна</Button>
+                </StackPanel>
+            </Grid>
+
+            <Border IsVisible="{Binding IsLoading}" 
+                    Background="{DynamicResource CardBackgroundColor}"
+                    CornerRadius="8"
+                    Padding="32"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
+                    <ProgressBar IsIndeterminate="True" Width="200" Height="4"/>
+                    <TextBlock Text="Завантаження студентів..." Classes="Small"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
