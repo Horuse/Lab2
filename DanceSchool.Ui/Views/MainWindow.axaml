@@ -9,13 +9,14 @@
                xmlns:groupViews="using:DanceSchool.Ui.Views.Groups"
                xmlns:instructorViews="using:DanceSchool.Ui.Views.Instructors"
                xmlns:classViews="using:DanceSchool.Ui.Views.Classes"
+               xmlns:attendanceViews="using:DanceSchool.Ui.Views.Attendances"
                mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
                x:Class="DanceSchool.Ui.Views.MainWindow"
                x:DataType="vm:MainWindowViewModel"
                Icon="/Assets/avalonia-logo.ico"
                Title="{Binding Title}"
                Width="1200" Height="800"
-               WindowState="Normal">
+               >
     
     <shadui:Window.Hosts>
         <shadui:DialogHost 
@@ -324,13 +325,15 @@
 
                 <instructorViews:InstructorsView IsVisible="{Binding $parent[Panel].DataContext.SelectedView, Converter={StaticResource StringEquals}, ConverterParameter=Instructors}"
                                                 DataContext="{Binding InstructorsViewModel}"/>
+                
+                <attendanceViews:AttendancesView IsVisible="{Binding $parent[Panel].DataContext.SelectedView, Converter={StaticResource StringEquals}, ConverterParameter=Attendance}"
+                                                 DataContext="{Binding AttendancesViewModel}"/>
 
-                <StackPanel IsVisible="{Binding SelectedView, Converter={StaticResource StringEquals}, ConverterParameter=Attendance}"
-                           HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
-                    <TextBlock Classes="LucideIcon" Text="" FontSize="64" HorizontalAlignment="Center" Opacity="0.3"/>
-                    <TextBlock Text="Відвідування" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
-                    <TextBlock Text="Цей розділ в розробці" Classes="Small Muted" HorizontalAlignment="Center"/>
-                </StackPanel>
+                <!-- <StackPanel IsVisible="{Binding SelectedView, Converter={StaticResource StringEquals}, ConverterParameter=Attendance}" -->
+                <!--            HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16"> -->
+                <!--     <TextBlock Classes="LucideIcon" Text="" FontSize="64" HorizontalAlignment="Center" Opacity="0.3"/> -->
+                <!--     <attendanceViews:AttendancesView DataContext="{Binding AttendancesViewModel}"/> -->
+                <!-- </StackPanel> -->
 
                 <StackPanel IsVisible="{Binding SelectedView, Converter={StaticResource StringEquals}, ConverterParameter=Studios}"
                            HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">

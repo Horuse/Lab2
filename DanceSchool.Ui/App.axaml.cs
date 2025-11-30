@@ -71,14 +71,18 @@ public partial class App : Application
         services.AddScoped<InstructorService>();
         services.AddScoped<ClassService>();
         services.AddScoped<StudioService>();
+        services.AddScoped<AttendanceService>();
 
         services.AddTransient<MainWindowViewModel>();
         services.AddTransient<ViewModels.Students.StudentsViewModel>();
         services.AddTransient<ViewModels.Groups.GroupsViewModel>();
         services.AddTransient<ViewModels.Classes.ClassesViewModel>();
         services.AddTransient<ViewModels.Instructors.InstructorsViewModel>();
+        services.AddTransient<ViewModels.Attendances.AttendancesViewModel>();
         services.AddTransient<ViewModels.Students.AddStudentViewModel>();
         services.AddTransient<ViewModels.Groups.AddGroupViewModel>();
+        services.AddTransient<ViewModels.Groups.GroupStudentsViewModel>();
+        services.AddTransient<ViewModels.Groups.GroupInstructorsViewModel>();
         services.AddTransient<ViewModels.Instructors.AddInstructorViewModel>();
         services.AddTransient<ViewModels.Classes.AddClassViewModel>();
         
@@ -96,6 +100,8 @@ public partial class App : Application
         var dialogManager = serviceProvider.GetRequiredService<DialogManager>();
         dialogManager.Register<Views.Students.AddStudentDialog, ViewModels.Students.AddStudentViewModel>();
         dialogManager.Register<Views.Groups.AddGroupDialog, ViewModels.Groups.AddGroupViewModel>();
+        dialogManager.Register<Views.Groups.GroupStudentsView, ViewModels.Groups.GroupStudentsViewModel>();
+        dialogManager.Register<Views.Groups.GroupInstructorsView, ViewModels.Groups.GroupInstructorsViewModel>();
         dialogManager.Register<Views.Instructors.AddInstructorDialog, ViewModels.Instructors.AddInstructorViewModel>();
         dialogManager.Register<Views.Classes.AddClassDialog, ViewModels.Classes.AddClassViewModel>();
     }

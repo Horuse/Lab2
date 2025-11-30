@@ -8,6 +8,7 @@ namespace DanceSchool.Ui.ViewModels.Classes
     public partial class ClassItemViewModel : ReactiveObject
     {
         public int Id { get; set; }
+        public int GroupId { get; set; }
         public DateTime Date { get; set; }
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }

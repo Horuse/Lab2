@@ -12,18 +12,20 @@
         <StackPanel HorizontalAlignment="Center" Spacing="16" Width="1100">
             <Grid ColumnDefinitions="* Auto">
                 <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="16">
-                    <Button Classes="Primary" Command="{Binding LoadStudentsCommand}">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Classes="LucideIcon" Text="&#57732;" FontSize="16"/>
-                            <TextBlock Text="Оновити"/>
-                        </StackPanel>
+                    <Button Classes="Primary" 
+                            Content="Оновити"
+                            Command="{Binding LoadStudentsCommand}">
+                        <shadui:ButtonAssist.Icon>
+                            <TextBlock Classes="LucideIcon" Text="&#57732;" Margin="0,0,6,0" />
+                        </shadui:ButtonAssist.Icon>
                     </Button>
                     
-                    <Button Classes="Secondary" Command="{Binding AddStudentCommand}">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Classes="LucideIcon" Text="&#57665;" FontSize="16"/>
-                            <TextBlock Text="Додати студента"/>
-                        </StackPanel>
+                    <Button Classes="Secondary" 
+                            Content="Додати студента"
+                            Command="{Binding AddStudentCommand}">
+                        <shadui:ButtonAssist.Icon>
+                            <TextBlock Classes="LucideIcon" Text="&#57665;" Margin="0,0,6,0" />
+                        </shadui:ButtonAssist.Icon>
                     </Button>
                 </StackPanel>
 

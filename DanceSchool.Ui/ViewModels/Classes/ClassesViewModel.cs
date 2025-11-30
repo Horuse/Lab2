@@ -16,6 +16,8 @@ namespace DanceSchool.Ui.ViewModels.Classes
         private readonly ClassService _classService;
         private readonly DialogManager _dialogManager;
         private readonly IServiceProvider _serviceProvider;
+        
+        public Action<int>? NavigateToGroupAttendance { get; set; }
 
         public ObservableCollection<ClassItemViewModel> Classes { get; } = new();
 
@@ -70,6 +72,7 @@ namespace DanceSchool.Ui.ViewModels.Classes
                     Classes.Add(new ClassItemViewModel
                     {
                         Id = classItem.Id,
+                        GroupId = classItem.GroupId,
                         Date = classItem.Date,
                         StartTime = classItem.StartTime,
                         EndTime = classItem.EndTime,
@@ -139,6 +142,16 @@ namespace DanceSchool.Ui.ViewModels.Classes
         {
             await _classService.DeleteClassAsync(id);
             await LoadClassesAsync();
+        }
+
+        [ReactiveCommand]
+        private void ShowClassAttendance(int classId)
+        {
+            var classItem = Classes.FirstOrDefault(c => c.Id == classId);
+            if (classItem != null)
+            {
+                NavigateToGroupAttendance?.Invoke(classItem.GroupId);
+            }
         }
     }
 }

@@ -29,6 +29,16 @@ namespace DanceSchool.Ui.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Group>> GetAllGroupsWithDetailsAsync()
+        {
+            return await _dbSet
+                .Include(g => g.StudentGroups)
+                .ThenInclude(sg => sg.Student)
+                .Include(g => g.GroupInstructors)
+                .ThenInclude(gi => gi.Instructor)
+                .ToListAsync();
+        }
+
         public async Task<Group?> GetGroupWithDetailsAsync(int id)
         {
             return await _dbSet

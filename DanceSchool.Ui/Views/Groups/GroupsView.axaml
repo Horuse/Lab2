@@ -10,20 +10,25 @@
 
     <ScrollViewer HorizontalScrollBarVisibility="Auto">
         <StackPanel HorizontalAlignment="Center" Spacing="16" Width="1100">
+            
+            <!-- Groups List View -->
+            <StackPanel IsVisible="{Binding ShowGroupsList}" Spacing="16">
             <Grid ColumnDefinitions="* Auto">
                 <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="16">
-                    <Button Classes="Primary" Command="{Binding LoadGroupsCommand}">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Classes="LucideIcon" Text="&#57732;" FontSize="16"/>
-                            <TextBlock Text="Оновити"/>
-                        </StackPanel>
+                    <Button Classes="Primary" 
+                            Content="Оновити"
+                            Command="{Binding LoadGroupsCommand}">
+                        <shadui:ButtonAssist.Icon>
+                            <TextBlock Classes="LucideIcon" Text="&#57732;" Margin="0,0,6,0" />
+                        </shadui:ButtonAssist.Icon>
                     </Button>
                     
-                    <Button Classes="Secondary" Command="{Binding AddGroupCommand}">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Classes="LucideIcon" Text="&#57665;" FontSize="16"/>
-                            <TextBlock Text="Додати групу"/>
-                        </StackPanel>
+                    <Button Classes="Secondary" 
+                            Content="Додати групу"
+                            Command="{Binding AddGroupCommand}">
+                        <shadui:ButtonAssist.Icon>
+                            <TextBlock Classes="LucideIcon" Text="&#57665;" Margin="0,0,6,0" />
+                        </shadui:ButtonAssist.Icon>
                     </Button>
                 </StackPanel>
 
@@ -106,9 +111,18 @@
                                             <TextBlock Classes="LucideIcon" Text="&#57849;" />
                                         </shadui:ButtonAssist.Icon>
                                     </Button>
-                                    <Button Content="Переглянути студентів">
+                                    <Button Content="Переглянути студентів"
+                                            Command="{Binding $parent[UserControl].((vm:GroupsViewModel)DataContext).ManageGroupStudentsCommand}"
+                                            CommandParameter="{Binding Id}">
                                         <shadui:ButtonAssist.Icon>
                                             <TextBlock Classes="LucideIcon" Text="&#57921;" />
+                                        </shadui:ButtonAssist.Icon>
+                                    </Button>
+                                    <Button Content="Призначити інструкторів"
+                                            Command="{Binding $parent[UserControl].((vm:GroupsViewModel)DataContext).ManageGroupInstructorsCommand}"
+                                            CommandParameter="{Binding Id}">
+                                        <shadui:ButtonAssist.Icon>
+                                            <TextBlock Classes="LucideIcon" Text="&#57804;" />
                                         </shadui:ButtonAssist.Icon>
                                     </Button>
                                     <Button Content="Розклад занять">
@@ -148,6 +162,44 @@
                     <TextBlock Text="Завантаження груп..." Classes="Small"/>
                 </StackPanel>
             </Border>
+            </StackPanel>
+
+            <!-- Group Students Management View -->
+            <StackPanel IsVisible="{Binding ShowGroupStudents}" Spacing="16">
+                <Grid ColumnDefinitions="Auto *">
+                    <Button Grid.Column="0" 
+                            Classes="Secondary" 
+                            Content="Назад"
+                            Command="{Binding BackToGroupsListCommand}"
+                            Margin="0,0,16,0">
+                        <shadui:ButtonAssist.Icon>
+                            <TextBlock  Margin="0,0,6,0" Classes="LucideIcon" Text="" />
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
+                </Grid>
+
+                <ContentControl Content="{Binding GroupStudentsViewModel}"
+                               IsVisible="{Binding GroupStudentsViewModel, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+            </StackPanel>
+
+            <!-- Group Instructors Management View -->
+            <StackPanel IsVisible="{Binding ShowGroupInstructors}" Spacing="16">
+                <Grid ColumnDefinitions="Auto *">
+                    <Button Grid.Column="0" 
+                            Classes="Secondary" 
+                            Content="Назад"
+                            Command="{Binding BackToGroupsListCommand}"
+                            Margin="0,0,16,0">
+                        <shadui:ButtonAssist.Icon>
+                            <TextBlock  Margin="0,0,6,0" Classes="LucideIcon" Text="" />
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
+                </Grid>
+
+                <ContentControl Content="{Binding GroupInstructorsViewModel}"
+                               IsVisible="{Binding GroupInstructorsViewModel, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+            </StackPanel>
+
         </StackPanel>
     </ScrollViewer>
 </UserControl>

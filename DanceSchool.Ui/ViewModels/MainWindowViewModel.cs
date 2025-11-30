@@ -6,6 +6,7 @@ using DanceSchool.Ui.ViewModels.Students;
 using DanceSchool.Ui.ViewModels.Groups;
 using DanceSchool.Ui.ViewModels.Classes;
 using DanceSchool.Ui.ViewModels.Instructors;
+using DanceSchool.Ui.ViewModels.Attendances;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Reactive;
@@ -30,6 +31,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public GroupsViewModel GroupsViewModel { get; }
     public ClassesViewModel ClassesViewModel { get; }
     public InstructorsViewModel InstructorsViewModel { get; }
+    public AttendancesViewModel AttendancesViewModel { get; }
 
     public MainWindowViewModel(IServiceProvider serviceProvider, DialogManager dialogManager)
     {
@@ -41,6 +43,10 @@ public partial class MainWindowViewModel : ViewModelBase
         GroupsViewModel = _serviceProvider.GetRequiredService<GroupsViewModel>();
         ClassesViewModel = _serviceProvider.GetRequiredService<ClassesViewModel>();
         InstructorsViewModel = _serviceProvider.GetRequiredService<InstructorsViewModel>();
+        AttendancesViewModel = _serviceProvider.GetRequiredService<AttendancesViewModel>();
+        
+        // Setup navigation from classes to attendance
+        ClassesViewModel.NavigateToGroupAttendance = NavigateToGroupAttendance;
         
         MenuItems = new ObservableCollection<string>
         {
@@ -74,6 +80,16 @@ public partial class MainWindowViewModel : ViewModelBase
             case "Instructors":
                 InstructorsViewModel.LoadInstructorsCommand.Execute(Unit.Default);
                 break;
+            case "Attendance":
+                AttendancesViewModel.LoadGroupsCommand.Execute(Unit.Default);
+                break;
         }
+    }
+    
+    private void NavigateToGroupAttendance(int groupId)
+    {
+        SelectedView = "Attendance";
+        AttendancesViewModel.LoadGroupsCommand.Execute(Unit.Default);
+        AttendancesViewModel.SelectGroupCommand.Execute(groupId);
     }
 }

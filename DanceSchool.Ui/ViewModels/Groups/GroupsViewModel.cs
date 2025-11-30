@@ -28,6 +28,21 @@ namespace DanceSchool.Ui.ViewModels.Groups
         [Reactive]
         private string _searchText = string.Empty;
 
+        [Reactive]
+        private bool _showGroupsList = true;
+
+        [Reactive]
+        private bool _showGroupStudents = false;
+
+        [Reactive]
+        private bool _showGroupInstructors = false;
+
+        [Reactive]
+        private GroupStudentsViewModel? _groupStudentsViewModel;
+
+        [Reactive]
+        private GroupInstructorsViewModel? _groupInstructorsViewModel;
+
         public GroupsViewModel(GroupService groupService, DialogManager dialogManager, IServiceProvider serviceProvider)
         {
             _groupService = groupService;
@@ -59,7 +74,7 @@ namespace DanceSchool.Ui.ViewModels.Groups
             IsLoading = true;
             try
             {
-                var groups = await _groupService.GetAllGroupsAsync();
+                var groups = await _groupService.GetAllGroupsWithDetailsAsync();
                 Groups.Clear();
                 
                 foreach (var group in groups)
@@ -131,6 +146,37 @@ namespace DanceSchool.Ui.ViewModels.Groups
         {
             await _groupService.DeleteGroupAsync(id);
             await LoadGroups();
+        }
+
+        [ReactiveCommand]
+        public async Task ManageGroupStudentsAsync(int id)
+        {
+            GroupStudentsViewModel = _serviceProvider.GetRequiredService<GroupStudentsViewModel>();
+            await GroupStudentsViewModel.InitializeAsync(id);
+            
+            ShowGroupsList = false;
+            ShowGroupStudents = true;
+        }
+
+        [ReactiveCommand]
+        public async Task ManageGroupInstructorsAsync(int id)
+        {
+            GroupInstructorsViewModel = _serviceProvider.GetRequiredService<GroupInstructorsViewModel>();
+            await GroupInstructorsViewModel.InitializeAsync(id);
+            
+            ShowGroupsList = false;
+            ShowGroupInstructors = true;
+        }
+
+        [ReactiveCommand]
+        public async Task BackToGroupsListAsync()
+        {
+            ShowGroupStudents = false;
+            ShowGroupInstructors = false;
+            ShowGroupsList = true;
+            GroupStudentsViewModel = null;
+            GroupInstructorsViewModel = null;
+            await LoadGroups(); // Refresh to show updated counts
         }
     }
 }

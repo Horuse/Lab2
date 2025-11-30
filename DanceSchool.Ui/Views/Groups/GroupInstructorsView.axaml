@@ -1,0 +1,214 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             xmlns:vm="using:DanceSchool.Ui.ViewModels.Groups"
+             mc:Ignorable="d" d:DesignWidth="1400" d:DesignHeight="800"
+             x:Class="DanceSchool.Ui.Views.Groups.GroupInstructorsView"
+             x:DataType="vm:GroupInstructorsViewModel">
+
+    <ScrollViewer HorizontalScrollBarVisibility="Auto">
+        <StackPanel HorizontalAlignment="Center" Spacing="16" Width="1300">
+        <StackPanel Spacing="8">
+            <TextBlock Text="Управління інструкторами групи" FontSize="18" FontWeight="Bold"/>
+            <TextBlock Text="{Binding SelectedGroup.Name, StringFormat='Група: {0}'}" Classes="Small Muted"/>
+        </StackPanel>
+
+        <Grid ColumnDefinitions="1* 1*" ColumnSpacing="24" MinHeight="650">
+        <!-- Current Group Instructors -->
+        <StackPanel Grid.Column="0" Spacing="16">
+            <StackPanel Spacing="8">
+                <TextBlock Text="Інструктори в групі" FontSize="16" FontWeight="SemiBold"/>
+                
+                <Grid ColumnDefinitions="* Auto">
+                    <TextBox Grid.Column="0"
+                             Classes="Clearable"
+                             Watermark="Пошук інструкторів..."
+                             Text="{Binding SearchText}">
+                        <TextBox.InnerRightContent>
+                            <PathIcon Data="{x:Static shadui:Icons.Search}" 
+                                      Opacity="0.75" 
+                                      Width="16"/>
+                        </TextBox.InnerRightContent>
+                    </TextBox>
+                    
+                    <Button Grid.Column="1" 
+                            Classes="Primary" 
+                            Content="Оновити"
+                            Command="{Binding LoadGroupInstructorsCommand}"
+                            Margin="8,0,0,0">
+                        <shadui:ButtonAssist.Icon>
+                            <TextBlock Classes="LucideIcon" Text="&#57732;" Margin="0,0,6,0" />
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
+                </Grid>
+            </StackPanel>
+
+            <Border BorderBrush="{DynamicResource BorderColor}" 
+                    BorderThickness="1" 
+                    CornerRadius="8" 
+                    Height="450">
+                <ScrollViewer>
+                    <DataGrid ItemsSource="{Binding FilteredGroupInstructors}"
+                              GridLinesVisibility="Horizontal"
+                              HeadersVisibility="Column"
+                              CanUserReorderColumns="False"
+                              CanUserSortColumns="True">
+                        
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Ім'я" 
+                                                Binding="{Binding FirstName}" 
+                                                Width="*"
+                                                MinWidth="80"/>
+                            
+                            <DataGridTextColumn Header="Прізвище" 
+                                                Binding="{Binding LastName}" 
+                                                Width="*"
+                                                MinWidth="80"/>
+                            
+                            <DataGridTextColumn Header="Email" 
+                                                Binding="{Binding Email}" 
+                                                Width="*"
+                                                MinWidth="120"/>
+                            
+                            <DataGridTextColumn Header="Спеціалізація" 
+                                                Binding="{Binding Specialization}" 
+                                                Width="*"
+                                                MinWidth="100"/>
+                            
+                            <DataGridTextColumn Header="Дата призначення" 
+                                                Binding="{Binding AssignedDate, StringFormat=dd/MM/yyyy}" 
+                                                Width="120"/>
+
+                            <DataGridTemplateColumn CanUserResize="False" CanUserSort="False" Header="Дії">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Classes="Destructive" 
+                                                Content="Видалити"
+                                                Command="{Binding $parent[UserControl].((vm:GroupInstructorsViewModel)DataContext).RemoveInstructorFromGroupCommand}"
+                                                CommandParameter="{Binding InstructorId}"
+                                                Margin="4">
+                                            <shadui:ButtonAssist.Icon>
+                                                <TextBlock Classes="LucideIcon" Text="&#57741;" Margin="0,0,6,0" />
+                                            </shadui:ButtonAssist.Icon>
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ScrollViewer>
+            </Border>
+
+            <TextBlock Classes="Small Muted">
+                <Run Text="{Binding FilteredGroupInstructors.Count}" />
+                <Run Text="інструкторів в групі" />
+            </TextBlock>
+        </StackPanel>
+
+        <!-- Available Instructors to Add -->
+        <StackPanel Grid.Column="1" Spacing="16">
+            <StackPanel Spacing="8">
+                <TextBlock Text="Доступні інструктори" FontSize="16" FontWeight="SemiBold"/>
+                
+                <Grid ColumnDefinitions="* Auto">
+                    <TextBox Grid.Column="0"
+                             Classes="Clearable"
+                             Watermark="Пошук доступних інструкторів..."
+                             Text="{Binding AvailableInstructorsSearchText}">
+                        <TextBox.InnerRightContent>
+                            <PathIcon Data="{x:Static shadui:Icons.Search}" 
+                                      Opacity="0.75" 
+                                      Width="16"/>
+                        </TextBox.InnerRightContent>
+                    </TextBox>
+                    
+                    <Button Grid.Column="1" 
+                            Classes="Secondary" 
+                            Content="Оновити"
+                            Command="{Binding LoadAvailableInstructorsCommand}"
+                            Margin="8,0,0,0">
+                        <shadui:ButtonAssist.Icon>
+                            <TextBlock Classes="LucideIcon" Text="&#57732;" Margin="0,0,6,0" />
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
+                </Grid>
+            </StackPanel>
+
+            <Border BorderBrush="{DynamicResource BorderColor}" 
+                    BorderThickness="1" 
+                    CornerRadius="8" 
+                    Height="450">
+                <ScrollViewer>
+                    <DataGrid ItemsSource="{Binding FilteredAvailableInstructors}"
+                              GridLinesVisibility="Horizontal"
+                              HeadersVisibility="Column"
+                              CanUserReorderColumns="False"
+                              CanUserSortColumns="True">
+                        
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Ім'я" 
+                                                Binding="{Binding FirstName}" 
+                                                Width="*"
+                                                MinWidth="80"/>
+                            
+                            <DataGridTextColumn Header="Прізвище" 
+                                                Binding="{Binding LastName}" 
+                                                Width="*"
+                                                MinWidth="80"/>
+                            
+                            <DataGridTextColumn Header="Email" 
+                                                Binding="{Binding Email}" 
+                                                Width="*"
+                                                MinWidth="120"/>
+                            
+                            <DataGridTextColumn Header="Спеціалізація" 
+                                                Binding="{Binding Specialization}" 
+                                                Width="*"
+                                                MinWidth="100"/>
+
+                            <DataGridTemplateColumn CanUserResize="False" CanUserSort="False" Header="Дії">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Classes="Primary" 
+                                                Content="Призначити"
+                                                Command="{Binding $parent[UserControl].((vm:GroupInstructorsViewModel)DataContext).AssignInstructorToGroupCommand}"
+                                                CommandParameter="{Binding InstructorId}"
+                                                Margin="4">
+                                            <shadui:ButtonAssist.Icon>
+                                                <TextBlock Classes="LucideIcon" Text="&#57665;" Margin="0,0,6,0" />
+                                            </shadui:ButtonAssist.Icon>
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ScrollViewer>
+            </Border>
+
+            <TextBlock Classes="Small Muted">
+                <Run Text="{Binding FilteredAvailableInstructors.Count}" />
+                <Run Text="доступних інструкторів" />
+            </TextBlock>
+        </StackPanel>
+    </Grid>
+
+        <!-- Loading Indicator -->
+        <Border IsVisible="{Binding IsLoading}" 
+                Background="{DynamicResource CardBackgroundColor}"
+                CornerRadius="8"
+                Padding="32"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
+                <ProgressBar IsIndeterminate="True" Width="200" Height="4"/>
+                <TextBlock Text="Завантаження..." Classes="Small"/>
+            </StackPanel>
+        </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+
+</UserControl>

@@ -12,18 +12,20 @@
         <StackPanel HorizontalAlignment="Center" Spacing="16" Width="1100">
             <Grid ColumnDefinitions="* Auto">
                 <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="16">
-                    <Button Classes="Primary" Command="{Binding LoadClassesCommand}">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Classes="LucideIcon" Text="&#57732;" FontSize="16"/>
-                            <TextBlock Text="Оновити"/>
-                        </StackPanel>
+                    <Button Classes="Primary" 
+                            Content="Оновити"
+                            Command="{Binding LoadClassesCommand}">
+                        <shadui:ButtonAssist.Icon>
+                            <TextBlock Classes="LucideIcon" Text="&#57732;" Margin="0,0,6,0" />
+                        </shadui:ButtonAssist.Icon>
                     </Button>
                     
-                    <Button Classes="Secondary" Command="{Binding AddClassCommand}">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Classes="LucideIcon" Text="&#57665;" FontSize="16"/>
-                            <TextBlock Text="Додати заняття"/>
-                        </StackPanel>
+                    <Button Classes="Secondary" 
+                            Content="Додати заняття"
+                            Command="{Binding AddClassCommand}">
+                        <shadui:ButtonAssist.Icon>
+                            <TextBlock Classes="LucideIcon" Text="&#57665;" Margin="0,0,6,0" />
+                        </shadui:ButtonAssist.Icon>
                     </Button>
                 </StackPanel>
 
@@ -61,12 +63,12 @@
                                         IsReadOnly="True"/>
                     
                     <DataGridTextColumn Header="Початок" 
-                                        Binding="{Binding StartTime, StringFormat=hh\:mm}" 
+                                        Binding="{Binding StartTime, StringFormat={}{0:hh\\:mm}}" 
                                         Width="80"
                                         IsReadOnly="True"/>
                     
                     <DataGridTextColumn Header="Кінець" 
-                                        Binding="{Binding EndTime, StringFormat=hh\:mm}" 
+                                        Binding="{Binding EndTime, StringFormat={}{0:hh\\:mm}}" 
                                         Width="80"
                                         IsReadOnly="True"/>
                     
@@ -124,17 +126,14 @@
                                             Command="{Binding $parent[UserControl].((vm:ClassesViewModel)DataContext).EditClassCommand}"
                                             CommandParameter="{Binding Id}">
                                         <shadui:ButtonAssist.Icon>
-                                            <TextBlock Classes="LucideIcon" Text="&#57849;" />
+                                            <TextBlock Classes="LucideIcon" Text="&#57849;" Margin="0,0,6,0" />
                                         </shadui:ButtonAssist.Icon>
                                     </Button>
-                                    <Button Content="Відвідування">
+                                    <Button Content="Відвідування"
+                                            Command="{Binding $parent[UserControl].((vm:ClassesViewModel)DataContext).ShowClassAttendanceCommand}"
+                                            CommandParameter="{Binding Id}">
                                         <shadui:ButtonAssist.Icon>
-                                            <TextBlock Classes="LucideIcon" Text="&#57456;" />
-                                        </shadui:ButtonAssist.Icon>
-                                    </Button>
-                                    <Button Content="Копіювати заняття">
-                                        <shadui:ButtonAssist.Icon>
-                                            <TextBlock Classes="LucideIcon" Text="&#57699;" />
+                                            <TextBlock Classes="LucideIcon" Text="&#57456;" Margin="0,0,6,0" />
                                         </shadui:ButtonAssist.Icon>
                                     </Button>
                                     <Separator />
@@ -143,7 +142,7 @@
                                             Command="{Binding $parent[UserControl].((vm:ClassesViewModel)DataContext).DeleteClassCommand}"
                                             CommandParameter="{Binding Id}">
                                         <shadui:ButtonAssist.Icon>
-                                            <TextBlock Classes="LucideIcon" Text="&#57741;" />
+                                            <TextBlock Classes="LucideIcon" Text="&#57741;" Margin="0,0,6,0" />
                                         </shadui:ButtonAssist.Icon>
                                     </Button>
                                 </shadui:SimpleDropdown>

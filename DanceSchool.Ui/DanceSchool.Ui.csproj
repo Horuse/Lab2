@@ -47,5 +47,8 @@
     <Compile Update="Views\Classes\AddClassDialog.axaml.cs">
       <DependentUpon>AddClassDialog.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\Attendances\AttendancesView.axaml.cs">
+      <DependentUpon>AttendancesView.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

@@ -44,6 +44,11 @@ namespace DanceSchool.Ui.Services
             return await _groupRepository.GetGroupsWithStudentsAsync();
         }
 
+        public async Task<IEnumerable<Group>> GetAllGroupsWithDetailsAsync()
+        {
+            return await _groupRepository.GetAllGroupsWithDetailsAsync();
+        }
+
         public async Task<IEnumerable<Group>> GetAvailableGroupsAsync()
         {
             return await _groupRepository.GetAvailableGroupsAsync();
@@ -143,6 +148,57 @@ namespace DanceSchool.Ui.Services
                 if (assignment == null) return false;
 
                 group.GroupInstructors.Remove(assignment);
+                await _groupRepository.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> AddStudentToGroupAsync(int groupId, int studentId)
+        {
+            try
+            {
+                var group = await _groupRepository.GetGroupWithDetailsAsync(groupId);
+                if (group == null) return false;
+
+                // Check if group is at capacity
+                if (group.StudentGroups.Count >= group.MaxCapacity) return false;
+
+                // Check if student is already in the group
+                var existingAssignment = group.StudentGroups.Any(sg => sg.StudentId == studentId);
+                if (existingAssignment) return false;
+
+                var studentGroup = new StudentGroup
+                {
+                    GroupId = groupId,
+                    StudentId = studentId,
+                    EnrollmentDate = DateTime.Now
+                };
+
+                group.StudentGroups.Add(studentGroup);
+                await _groupRepository.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> RemoveStudentFromGroupAsync(int groupId, int studentId)
+        {
+            try
+            {
+                var group = await _groupRepository.GetGroupWithDetailsAsync(groupId);
+                if (group == null) return false;
+
+                var assignment = group.StudentGroups.FirstOrDefault(sg => sg.StudentId == studentId);
+                if (assignment == null) return false;
+
+                group.StudentGroups.Remove(assignment);
                 await _groupRepository.SaveChangesAsync();
                 return true;
             }

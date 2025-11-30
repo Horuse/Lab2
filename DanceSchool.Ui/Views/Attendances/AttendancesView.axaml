@@ -1,0 +1,243 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             xmlns:vm="using:DanceSchool.Ui.ViewModels.Attendances"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+             x:Class="DanceSchool.Ui.Views.Attendances.AttendancesView"
+             x:DataType="vm:AttendancesViewModel">
+
+    <ScrollViewer HorizontalScrollBarVisibility="Auto">
+        <StackPanel HorizontalAlignment="Center" Spacing="16" Width="1100">
+            
+            <!-- Group Selection View -->
+            <StackPanel IsVisible="{Binding ShowGroupList}" Spacing="16">
+                <Grid ColumnDefinitions="* Auto">
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="16">
+                        <Button Classes="Primary" 
+                                Content="Оновити"
+                                Command="{Binding LoadGroupsCommand}">
+                            <shadui:ButtonAssist.Icon>
+                                <TextBlock Classes="LucideIcon" Text="&#57732;" Margin="0,0,6,0" />
+                            </shadui:ButtonAssist.Icon>
+                        </Button>
+                    </StackPanel>
+
+                    <TextBox Grid.Column="1"
+                             Classes="Clearable"
+                             Width="250" 
+                             Watermark="Пошук груп..."
+                             Text="{Binding SearchText}"
+                             shadui:ControlAssist.ShowProgress="{Binding IsLoading}">
+                        <TextBox.InnerRightContent>
+                            <PathIcon Data="{x:Static shadui:Icons.Search}" 
+                                      Opacity="0.75" 
+                                      Width="16"/>
+                        </TextBox.InnerRightContent>
+                    </TextBox>
+                </Grid>
+
+                <DataGrid CanUserReorderColumns="False"
+                          CanUserSortColumns="True"
+                          GridLinesVisibility="Horizontal"
+                          ItemsSource="{Binding FilteredGroups}"
+                          SelectionMode="Single"
+                          x:Name="GroupsDataGrid">
+                    
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Назва" 
+                                            Binding="{Binding Name}" 
+                                            Width="*"
+                                            MinWidth="200"/>
+                        
+                        <DataGridTextColumn Header="Студентів" 
+                                            Binding="{Binding StudentsCount}" 
+                                            Width="100"/>
+                        
+                        <DataGridTextColumn Header="Вікова категорія" 
+                                            Binding="{Binding AgeCategory}" 
+                                            Width="*"
+                                            MinWidth="150"/>
+                        
+                        <DataGridTextColumn Header="Рівень навичок" 
+                                            Binding="{Binding SkillLevel}" 
+                                            Width="*"
+                                            MinWidth="150"/>
+
+                        <DataGridTemplateColumn CanUserResize="False" CanUserSort="False" Header="Дії">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Classes="Primary" 
+                                            Content="Відвідування"
+                                            Command="{Binding $parent[UserControl].((vm:AttendancesViewModel)DataContext).SelectGroupCommand}"
+                                            CommandParameter="{Binding Id}"
+                                            Margin="8,4">
+                                        <shadui:ButtonAssist.Icon>
+                                            <TextBlock Classes="LucideIcon" Text="&#57456;" Margin="0,0,6,0" />
+                                        </shadui:ButtonAssist.Icon>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <TextBlock Classes="Small Muted" VerticalAlignment="Center">
+                    <Run Text="{Binding FilteredGroups.Count}" />
+                    <Run Text="груп знайдено" />
+                </TextBlock>
+            </StackPanel>
+
+            <!-- Attendance Grid View -->
+            <StackPanel IsVisible="{Binding ShowAttendanceGrid}" Spacing="16">
+                <Grid ColumnDefinitions="Auto *">
+                    <Button Grid.Column="0" 
+                            Classes="Secondary" 
+                            Content="Назад до груп"
+                            Command="{Binding BackToGroupListCommand}"
+                            Margin="0,0,16,0">
+                        <shadui:ButtonAssist.Icon>
+                            <TextBlock  Margin="0,0,6,0" Classes="LucideIcon" Text="" />
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
+
+                    <TextBlock Grid.Column="1" 
+                               Text="Відвідування групи" 
+                               FontSize="18" 
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"/>
+                </Grid>
+
+                <!-- Attendance Grid Container -->
+                <Border BorderBrush="{DynamicResource BorderColor}" 
+                        BorderThickness="1" 
+                        CornerRadius="8">
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" 
+                                  VerticalScrollBarVisibility="Auto"
+                                  MaxHeight="600">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/> <!-- Header with dates -->
+                                <RowDefinition Height="*"/>     <!-- Students and checkboxes -->
+                            </Grid.RowDefinitions>
+                            
+                            <!-- Header Row with Dates -->
+                            <Grid Grid.Row="0" Background="{DynamicResource CardBackgroundColor}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="200"/> <!-- Student names column -->
+                                    <ColumnDefinition Width="*"/>   <!-- Dates columns -->
+                                </Grid.ColumnDefinitions>
+                                
+                                <Border Grid.Column="0" 
+                                        BorderBrush="{DynamicResource BorderColor}" 
+                                        BorderThickness="0,0,1,1" 
+                                        Padding="12,8">
+                                    <TextBlock Text="Студент" 
+                                               FontWeight="Bold" 
+                                               VerticalAlignment="Center"/>
+                                </Border>
+
+                                <ItemsControl Grid.Column="1" ItemsSource="{Binding Classes}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="{DynamicResource BorderColor}" 
+                                                    BorderThickness="0,0,1,1" 
+                                                    Width="80" 
+                                                    Padding="4,8">
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBlock Text="{Binding Date, StringFormat=dd/MM}" 
+                                                               FontSize="12"
+                                                               FontWeight="Bold"
+                                                               HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="{Binding Date, StringFormat=dddd}" 
+                                                               FontSize="10"
+                                                               Opacity="0.7"
+                                                               HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
+
+                            <!-- Students and Attendance Checkboxes -->
+                            <ItemsControl Grid.Row="1" ItemsSource="{Binding AttendanceGrid}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="200"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            
+                                            <Border Grid.Column="0" 
+                                                    BorderBrush="{DynamicResource BorderColor}" 
+                                                    BorderThickness="0,0,1,1" 
+                                                    Padding="12,8"
+                                                    Background="{DynamicResource CardBackgroundColor}">
+                                                <TextBlock Text="{Binding StudentName}" 
+                                                           VerticalAlignment="Center"/>
+                                            </Border>
+
+                                            <ItemsControl Grid.Column="1" ItemsSource="{Binding Attendances}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Orientation="Horizontal"/>
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border BorderBrush="{DynamicResource BorderColor}" 
+                                                                BorderThickness="0,0,1,1" 
+                                                                Width="80" 
+                                                                Padding="4,8">
+                                                            <CheckBox IsChecked="{Binding IsPresent}"
+                                                                      HorizontalAlignment="Center"
+                                                                      Command="{Binding $parent[UserControl].((vm:AttendancesViewModel)DataContext).ToggleAttendanceCommand}"
+                                                                      CommandParameter="{Binding .}">
+                                                                <!-- Custom styling for attendance checkbox -->
+                                                                <CheckBox.Styles>
+                                                                    <Style Selector="CheckBox">
+                                                                        <Setter Property="BorderThickness" Value="2"/>
+                                                                        <Setter Property="CornerRadius" Value="4"/>
+                                                                    </Style>
+                                                                    <Style Selector="CheckBox:checked /template/ Border#checkBorder">
+                                                                        <Setter Property="Background" Value="#4ade80"/>
+                                                                        <Setter Property="BorderBrush" Value="#22c55e"/>
+                                                                    </Style>
+                                                                </CheckBox.Styles>
+                                                            </CheckBox>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
+                    </ScrollViewer>
+                </Border>
+            </StackPanel>
+
+            <!-- Loading Indicator -->
+            <Border IsVisible="{Binding IsLoading}" 
+                    Background="{DynamicResource CardBackgroundColor}"
+                    CornerRadius="8"
+                    Padding="32"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
+                    <ProgressBar IsIndeterminate="True" Width="200" Height="4"/>
+                    <TextBlock Text="Завантаження..." Classes="Small"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
