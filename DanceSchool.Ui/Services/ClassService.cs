@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DanceSchool.Data.Entities;
 using DanceSchool.Data.Enums;
@@ -73,6 +74,38 @@ namespace DanceSchool.Ui.Services
         public async Task<IEnumerable<Class>> GetClassesByDateAsync(DateTime date)
         {
             return await _classRepository.GetClassesForDateAsync(date);
+        }
+
+        public async Task<IEnumerable<Class>> GetClassesByInstructorAndDateAsync(int instructorId, DateTime date)
+        {
+            var allClasses = await _classRepository.GetClassesByInstructorIdAsync(instructorId);
+            return allClasses.Where(c => c.Date.Date == date.Date);
+        }
+
+        public async Task<IEnumerable<Class>> GetClassesByStudentAndDateAsync(int studentId, DateTime date)
+        {
+            // Потрібно отримати заняття через групи, до яких належить студент
+            var studentGroups = await GetStudentGroupsAsync(studentId);
+            var allClasses = await _classRepository.GetClassesWithDetailsAsync();
+            
+            return allClasses.Where(c => c.Date.Date == date.Date && 
+                                        studentGroups.Any(g => g.Id == c.GroupId));
+        }
+
+        private async Task<IEnumerable<Group>> GetStudentGroupsAsync(int studentId)
+        {
+            var groups = await _groupRepository.GetGroupsWithStudentsAsync();
+            var studentGroups = new List<Group>();
+            
+            foreach (var group in groups)
+            {
+                if (group.StudentGroups?.Any(sg => sg.StudentId == studentId) == true)
+                {
+                    studentGroups.Add(group);
+                }
+            }
+            
+            return studentGroups;
         }
 
         private async Task<string> ValidateClassAsync(Class classEntity, int? excludeId = null)

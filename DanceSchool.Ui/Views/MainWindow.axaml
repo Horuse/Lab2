@@ -11,6 +11,7 @@
                xmlns:classViews="using:DanceSchool.Ui.Views.Classes"
                xmlns:attendanceViews="using:DanceSchool.Ui.Views.Attendances"
                xmlns:studioViews="using:DanceSchool.Ui.Views.Studios"
+               xmlns:dashboardViews="using:DanceSchool.Ui.Views.Dashboard"
                mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
                x:Class="DanceSchool.Ui.Views.MainWindow"
                x:DataType="vm:MainWindowViewModel"
@@ -199,122 +200,8 @@
             </Border>
 
             <Panel Margin="24">
-                <StackPanel Spacing="24" IsVisible="{Binding SelectedView, Converter={StaticResource StringEquals}, ConverterParameter=Dashboard}">
-                    <UniformGrid Columns="4" ColumnSpacing="16">
-                        <shadui:Card HasShadow="True" Padding="20">
-                            <StackPanel Spacing="8">
-                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <TextBlock 
-                                        Classes="LucideIcon"
-                                        Text="&#57921;"
-                                        FontSize="20"
-                                        Foreground="#059669"/>
-                                    <TextBlock 
-                                        Text="Студенти"
-                                        Classes="Small Muted"
-                                        VerticalAlignment="Center"/>
-                                </StackPanel>
-                                <TextBlock 
-                                    Text="142"
-                                    FontSize="28"
-                                    FontWeight="Bold"
-                                    Classes="h1"/>
-                                <TextBlock 
-                                    Text="+12% за минулий місяць"
-                                    Classes="Caption"
-                                    Foreground="#059669"/>
-                            </StackPanel>
-                        </shadui:Card>
-
-                        <shadui:Card HasShadow="True" Padding="20">
-                            <StackPanel Spacing="8">
-                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <TextBlock 
-                                        Classes="LucideIcon"
-                                        Text="&#57954;"
-                                        FontSize="20"
-                                        Foreground="#0284c7"/>
-                                    <TextBlock 
-                                        Text="Групи"
-                                        Classes="Small Muted"
-                                        VerticalAlignment="Center"/>
-                                </StackPanel>
-                                <TextBlock 
-                                    Text="18"
-                                    FontSize="28"
-                                    FontWeight="Bold"
-                                    Classes="h1"/>
-                                <TextBlock 
-                                    Text="+2 нових цього місяця"
-                                    Classes="Caption"
-                                    Foreground="#0284c7"/>
-                            </StackPanel>
-                        </shadui:Card>
-
-                        <shadui:Card HasShadow="True" Padding="20">
-                            <StackPanel Spacing="8">
-                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <TextBlock 
-                                        Classes="LucideIcon"
-                                        Text="&#58391;"
-                                        FontSize="20"
-                                        Foreground="#7c3aed"/>
-                                    <TextBlock 
-                                        Text="Інструктори"
-                                        Classes="Small Muted"
-                                        VerticalAlignment="Center"/>
-                                </StackPanel>
-                                <TextBlock 
-                                    Text="12"
-                                    FontSize="28"
-                                    FontWeight="Bold"
-                                    Classes="h1"/>
-                                <TextBlock 
-                                    Text="Активні цього місяця"
-                                    Classes="Caption"
-                                    Foreground="#7c3aed"/>
-                            </StackPanel>
-                        </shadui:Card>
-
-                        <shadui:Card HasShadow="True" Padding="20">
-                            <StackPanel Spacing="8">
-                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <TextBlock 
-                                        Classes="LucideIcon"
-                                        Text="&#57515;"
-                                        FontSize="20"
-                                        Foreground="#dc2626"/>
-                                    <TextBlock 
-                                        Text="Заняття"
-                                        Classes="Small Muted"
-                                        VerticalAlignment="Center"/>
-                                </StackPanel>
-                                <TextBlock 
-                                    Text="89"
-                                    FontSize="28"
-                                    FontWeight="Bold"
-                                    Classes="h1"/>
-                                <TextBlock 
-                                    Text="Цього тижня"
-                                    Classes="Caption"
-                                    Foreground="#dc2626"/>
-                            </StackPanel>
-                        </shadui:Card>
-                    </UniformGrid>
-
-                    <shadui:Card HasShadow="True">
-                        <shadui:Card.Header>
-                            <shadui:CardDescription>Останні оновлення та активності у вашій танцювальній школі</shadui:CardDescription>
-                        </shadui:Card.Header>
-                        <StackPanel Spacing="16">
-                            <TextBlock 
-                                Text="Контент головної сторінки буде реалізований з реальними даними..."
-                                Classes="p"
-                                HorizontalAlignment="Center"
-                                Margin="0,32"/>
-                        </StackPanel>
-                    </shadui:Card>
-                </StackPanel>
+                <dashboardViews:DashboardView IsVisible="{Binding $parent[Panel].DataContext.SelectedView, Converter={StaticResource StringEquals}, ConverterParameter=Dashboard}"
+                                             DataContext="{Binding DashboardViewModel}"/>
 
                 <views:StudentsView IsVisible="{Binding $parent[Panel].DataContext.SelectedView, Converter={StaticResource StringEquals}, ConverterParameter=Students}"
                                    DataContext="{Binding StudentsViewModel}"/>

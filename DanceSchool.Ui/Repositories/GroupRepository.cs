@@ -51,6 +51,14 @@ namespace DanceSchool.Ui.Repositories
                 .FirstOrDefaultAsync(g => g.Id == id);
         }
 
+        public async Task<Group?> GetGroupWithStudentsAsync(int id)
+        {
+            return await _dbSet
+                .Include(g => g.StudentGroups)
+                .ThenInclude(sg => sg.Student)
+                .FirstOrDefaultAsync(g => g.Id == id);
+        }
+
         public async Task<IEnumerable<Group>> GetAvailableGroupsAsync()
         {
             return await _dbSet

@@ -11,7 +11,6 @@
     <ScrollViewer HorizontalScrollBarVisibility="Auto">
         <StackPanel HorizontalAlignment="Center" Spacing="16" Width="1100">
             
-            <!-- Group Selection View -->
             <StackPanel IsVisible="{Binding ShowGroupList}" Spacing="16">
                 <Grid ColumnDefinitions="* Auto">
                     <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="16">
@@ -89,7 +88,7 @@
                 </TextBlock>
             </StackPanel>
 
-            <!-- Attendance Grid View -->
+   
             <StackPanel IsVisible="{Binding ShowAttendanceGrid}" Spacing="16">
                 <Grid ColumnDefinitions="Auto *">
                     <Button Grid.Column="0" 
@@ -109,7 +108,7 @@
                                VerticalAlignment="Center"/>
                 </Grid>
 
-                <!-- Attendance Grid Container -->
+                
                 <Border BorderBrush="{DynamicResource BorderColor}" 
                         BorderThickness="1" 
                         CornerRadius="8">
@@ -118,15 +117,14 @@
                                   MaxHeight="600">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/> <!-- Header with dates -->
-                                <RowDefinition Height="*"/>     <!-- Students and checkboxes -->
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>  
                             </Grid.RowDefinitions>
                             
-                            <!-- Header Row with Dates -->
                             <Grid Grid.Row="0" Background="{DynamicResource CardBackgroundColor}">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="200"/> <!-- Student names column -->
-                                    <ColumnDefinition Width="*"/>   <!-- Dates columns -->
+                                    <ColumnDefinition Width="200"/>
+                                    <ColumnDefinition Width="*"/> 
                                 </Grid.ColumnDefinitions>
                                 
                                 <Border Grid.Column="0" 
@@ -166,7 +164,7 @@
                                 </ItemsControl>
                             </Grid>
 
-                            <!-- Students and Attendance Checkboxes -->
+                           
                             <ItemsControl Grid.Row="1" ItemsSource="{Binding AttendanceGrid}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
@@ -201,7 +199,7 @@
                                                                       HorizontalAlignment="Center"
                                                                       Command="{Binding $parent[UserControl].((vm:AttendancesViewModel)DataContext).ToggleAttendanceCommand}"
                                                                       CommandParameter="{Binding .}">
-                                                                <!-- Custom styling for attendance checkbox -->
+                                                             
                                                                 <CheckBox.Styles>
                                                                     <Style Selector="CheckBox">
                                                                         <Setter Property="BorderThickness" Value="2"/>
@@ -226,7 +224,7 @@
                 </Border>
             </StackPanel>
 
-            <!-- Loading Indicator -->
+         
             <Border IsVisible="{Binding IsLoading}" 
                     Background="{DynamicResource CardBackgroundColor}"
                     CornerRadius="8"

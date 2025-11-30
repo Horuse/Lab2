@@ -11,6 +11,7 @@ namespace DanceSchool.Ui.Repositories
         Task<IEnumerable<Group>> GetGroupsWithStudentsAsync();
         Task<IEnumerable<Group>> GetAllGroupsWithDetailsAsync();
         Task<Group?> GetGroupWithDetailsAsync(int id);
+        Task<Group?> GetGroupWithStudentsAsync(int id);
         Task<IEnumerable<Group>> GetAvailableGroupsAsync();
     }
 }

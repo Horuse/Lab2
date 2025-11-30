@@ -1,0 +1,175 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             xmlns:vm="using:DanceSchool.Ui.ViewModels.Dashboard"
+             xmlns:entities="clr-namespace:DanceSchool.Data.Entities;assembly=DanceSchool.Data"
+             xmlns:converters="using:DanceSchool.Ui.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="DanceSchool.Ui.Views.Dashboard.DashboardView"
+             x:DataType="vm:DashboardViewModel">
+
+    <StackPanel Spacing="24">
+
+        <shadui:Card HasShadow="True">
+            <StackPanel Spacing="16">
+                <TextBlock Text="Розклад дня" Classes="h3" FontWeight="Bold" />
+                
+                <Grid ColumnDefinitions="Auto,*,Auto,*,Auto,*" ColumnSpacing="16">
+      
+                    <TextBlock Grid.Column="0" Text="Тип особи:" VerticalAlignment="Center" Classes="Small" />
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                        <RadioButton Content="Інструктор" 
+                                    IsChecked="{Binding SelectedPersonType, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static vm:PersonType.Instructor}}"
+                                    Command="{Binding ChangePersonTypeCommand}"
+                                    CommandParameter="{x:Static vm:PersonType.Instructor}" />
+                        <RadioButton Content="Студент" 
+                                    IsChecked="{Binding SelectedPersonType, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static vm:PersonType.Student}}"
+                                    Command="{Binding ChangePersonTypeCommand}"
+                                    CommandParameter="{x:Static vm:PersonType.Student}" />
+                    </StackPanel>
+
+   
+                    <TextBlock Grid.Column="2" Text="Особа:" VerticalAlignment="Center" Classes="Small" />
+                    <ComboBox Grid.Column="3" 
+                             SelectedItem="{Binding SelectedPerson, Mode=TwoWay}"
+                             PlaceholderText="Оберіть особу..."
+                             MinWidth="200">
+                        <ComboBox.IsVisible>
+                            <Binding Path="SelectedPersonType" Converter="{x:Static ObjectConverters.Equal}" ConverterParameter="{x:Static vm:PersonType.Instructor}" />
+                        </ComboBox.IsVisible>
+                        <ComboBox.ItemsSource>
+                            <Binding Path="Instructors" />
+                        </ComboBox.ItemsSource>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate DataType="entities:Instructor">
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <TextBlock Text="{Binding FirstName}" />
+                                    <TextBlock Text="{Binding LastName}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    
+                    <ComboBox Grid.Column="3" 
+                             SelectedItem="{Binding SelectedPerson, Mode=TwoWay}"
+                             PlaceholderText="Оберіть особу..."
+                             MinWidth="200">
+                        <ComboBox.IsVisible>
+                            <Binding Path="SelectedPersonType" Converter="{x:Static ObjectConverters.Equal}" ConverterParameter="{x:Static vm:PersonType.Student}" />
+                        </ComboBox.IsVisible>
+                        <ComboBox.ItemsSource>
+                            <Binding Path="Students" />
+                        </ComboBox.ItemsSource>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate DataType="entities:Student">
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <TextBlock Text="{Binding FirstName}" />
+                                    <TextBlock Text="{Binding LastName}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+      
+                    <TextBlock Grid.Column="4" Text="Дата:" VerticalAlignment="Center" Classes="Small" />
+                    <CalendarDatePicker Grid.Column="5" 
+                                       SelectedDate="{Binding SelectedDate, Mode=TwoWay}"
+                                       MinWidth="150" />
+                </Grid>
+            </StackPanel>
+        </shadui:Card>
+
+
+        <shadui:Card HasShadow="True">
+            <shadui:Card.Header>
+                <TextBlock Text="Заняття на день" Classes="h4" FontWeight="SemiBold" />
+            </shadui:Card.Header>
+            
+            <StackPanel Spacing="16">
+                <ProgressBar IsIndeterminate="True" 
+                            IsVisible="{Binding IsLoading}"
+                            Height="4" />
+
+                <ScrollViewer MaxHeight="400" IsVisible="{Binding !IsLoading}">
+                    <ItemsControl ItemsSource="{Binding TodayClasses}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="entities:Class">
+                                <shadui:Card Classes="Compact" Margin="0,0,0,8">
+                                    <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="16">
+                                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding StartTime, StringFormat=hh\\:mm}" 
+                                                      FontWeight="Bold" Classes="Small" />
+                                            <TextBlock Text="{Binding EndTime, StringFormat=hh\\:mm}" 
+                                                      Classes="Caption Muted" />
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Topic}" FontWeight="SemiBold" />
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <TextBlock Text="Група:" Classes="Caption Muted" />
+                                                <TextBlock Text="{Binding Group.Name}" Classes="Caption" />
+                                            </StackPanel>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="Інструктор:" Classes="Caption Muted" />
+                                                <StackPanel Orientation="Horizontal" Spacing="2">
+                                                    <TextBlock Text="{Binding Instructor.FirstName}" Classes="Caption" />
+                                                    <TextBlock Text="{Binding Instructor.LastName}" Classes="Caption" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="Студія:" Classes="Caption Muted" />
+                                                <TextBlock Text="{Binding Studio.Name}" Classes="Caption" />
+                                            </StackPanel>
+                                        </StackPanel>
+
+                                        <Border Grid.Column="3" 
+                                               Background="{Binding ClassType, Converter={x:Static converters:ClassTypeToColorConverter.Instance}}"
+                                               CornerRadius="4" 
+                                               Padding="8,4">
+                                            <TextBlock Text="{Binding ClassType}" 
+                                                      Foreground="White" 
+                                                      FontSize="14" 
+                                                      HorizontalAlignment="Center" />
+                                        </Border>
+                                    </Grid>
+                                </shadui:Card>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+
+                <StackPanel IsVisible="{Binding !IsLoading}" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
+                    <StackPanel.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="!IsLoading" />
+                            <Binding Path="TodayClasses.Count" Converter="{x:Static ObjectConverters.Equal}" ConverterParameter="0" />
+                            <Binding Path="SelectedPerson" Converter="{x:Static ObjectConverters.IsNotNull}" />
+                        </MultiBinding>
+                    </StackPanel.IsVisible>
+                    
+                    <TextBlock Classes="LucideIcon" Text="📅" FontSize="48" HorizontalAlignment="Center" Opacity="0.3"/>
+                    <TextBlock Text="Немає занять на цей день" 
+                              Classes="Body" 
+                              Foreground="{DynamicResource TextSecondaryColor}"
+                              HorizontalAlignment="Center" />
+                </StackPanel>
+
+                <StackPanel IsVisible="{Binding SelectedPerson, Converter={x:Static ObjectConverters.IsNull}}" 
+                           HorizontalAlignment="Center" 
+                           VerticalAlignment="Center" 
+                           Spacing="16">
+                    <TextBlock Classes="LucideIcon" Text="👤" FontSize="48" HorizontalAlignment="Center" Opacity="0.3"/>
+                    <TextBlock Text="Оберіть інструктора або студента для перегляду розкладу" 
+                              Classes="Body" 
+                              Foreground="{DynamicResource TextSecondaryColor}"
+                              HorizontalAlignment="Center" />
+                </StackPanel>
+            </StackPanel>
+        </shadui:Card>
+    </StackPanel>
+</UserControl>

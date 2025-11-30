@@ -87,6 +87,7 @@ public partial class App : Application
         services.AddTransient<ViewModels.Classes.AddClassViewModel>();
         services.AddTransient<ViewModels.Studios.StudiosViewModel>();
         services.AddTransient<ViewModels.Studios.AddStudioViewModel>();
+        services.AddTransient<ViewModels.Dashboard.DashboardViewModel>();
         
         services.AddSingleton<DialogManager>();
         services.AddSingleton<ToastManager>();

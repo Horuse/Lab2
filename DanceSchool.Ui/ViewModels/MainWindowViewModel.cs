@@ -8,6 +8,7 @@ using DanceSchool.Ui.ViewModels.Classes;
 using DanceSchool.Ui.ViewModels.Instructors;
 using DanceSchool.Ui.ViewModels.Attendances;
 using DanceSchool.Ui.ViewModels.Studios;
+using DanceSchool.Ui.ViewModels.Dashboard;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Reactive;
@@ -29,6 +30,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public DialogManager DialogManager { get; }
     public ToastManager ToastManager { get; }
 
+    public DashboardViewModel DashboardViewModel { get; }
     public StudentsViewModel StudentsViewModel { get; }
     public GroupsViewModel GroupsViewModel { get; }
     public ClassesViewModel ClassesViewModel { get; }
@@ -43,6 +45,7 @@ public partial class MainWindowViewModel : ViewModelBase
         ToastManager = toastManager;
         
         // Initialize child ViewModels
+        DashboardViewModel = _serviceProvider.GetRequiredService<DashboardViewModel>();
         StudentsViewModel = _serviceProvider.GetRequiredService<StudentsViewModel>();
         GroupsViewModel = _serviceProvider.GetRequiredService<GroupsViewModel>();
         ClassesViewModel = _serviceProvider.GetRequiredService<ClassesViewModel>();
@@ -73,6 +76,9 @@ public partial class MainWindowViewModel : ViewModelBase
         // Initialize data when navigating to a view
         switch (view)
         {
+            case "Dashboard":
+                DashboardViewModel.Initialize();
+                break;
             case "Students":
                 StudentsViewModel.LoadStudentsCommand.Execute(Unit.Default);
                 break;
