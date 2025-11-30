@@ -40,8 +40,9 @@ namespace DanceSchool.Ui.Services
 
         public async Task<bool> CreateClassAsync(Class newClass)
         {
-            if (!await ValidateClassAsync(newClass))
-                return false;
+            var validationError = await ValidateClassAsync(newClass);
+            if (!string.IsNullOrEmpty(validationError))
+                throw new InvalidOperationException(validationError);
 
             await _classRepository.AddAsync(newClass);
             await _classRepository.SaveChangesAsync();
@@ -50,8 +51,9 @@ namespace DanceSchool.Ui.Services
 
         public async Task<bool> UpdateClassAsync(Class classToUpdate)
         {
-            if (!await ValidateClassAsync(classToUpdate, classToUpdate.Id))
-                return false;
+            var validationError = await ValidateClassAsync(classToUpdate, classToUpdate.Id);
+            if (!string.IsNullOrEmpty(validationError))
+                throw new InvalidOperationException(validationError);
 
             _classRepository.Update(classToUpdate);
             await _classRepository.SaveChangesAsync();
@@ -73,15 +75,21 @@ namespace DanceSchool.Ui.Services
             return await _classRepository.GetClassesForDateAsync(date);
         }
 
-        private async Task<bool> ValidateClassAsync(Class classEntity, int? excludeId = null)
+        private async Task<string> ValidateClassAsync(Class classEntity, int? excludeId = null)
         {
             var studioAvailable = await _classRepository.IsStudioAvailableForClassAsync(
-                classEntity.StudioId, classEntity.Date, excludeId);
+                classEntity.StudioId, classEntity.Date, classEntity.StartTime, classEntity.EndTime, excludeId);
             
             var instructorAvailable = await _classRepository.IsInstructorAvailableForClassAsync(
-                classEntity.InstructorId, classEntity.Date, excludeId);
+                classEntity.InstructorId, classEntity.Date, classEntity.StartTime, classEntity.EndTime, excludeId);
 
-            return studioAvailable && instructorAvailable;
+            if (!studioAvailable)
+                return "Студія зайнята на цей час.";
+            
+            if (!instructorAvailable)
+                return "Інструктор зайнятий на цей час.";
+
+            return string.Empty;
         }
     }
 }

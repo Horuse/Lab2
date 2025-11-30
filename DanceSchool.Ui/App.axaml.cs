@@ -85,8 +85,11 @@ public partial class App : Application
         services.AddTransient<ViewModels.Groups.GroupInstructorsViewModel>();
         services.AddTransient<ViewModels.Instructors.AddInstructorViewModel>();
         services.AddTransient<ViewModels.Classes.AddClassViewModel>();
+        services.AddTransient<ViewModels.Studios.StudiosViewModel>();
+        services.AddTransient<ViewModels.Studios.AddStudioViewModel>();
         
         services.AddSingleton<DialogManager>();
+        services.AddSingleton<ToastManager>();
         
         services.AddTransient<IServiceProvider>(sp => sp);
         
@@ -104,6 +107,7 @@ public partial class App : Application
         dialogManager.Register<Views.Groups.GroupInstructorsView, ViewModels.Groups.GroupInstructorsViewModel>();
         dialogManager.Register<Views.Instructors.AddInstructorDialog, ViewModels.Instructors.AddInstructorViewModel>();
         dialogManager.Register<Views.Classes.AddClassDialog, ViewModels.Classes.AddClassViewModel>();
+        dialogManager.Register<Views.Studios.AddStudioDialog, ViewModels.Studios.AddStudioViewModel>();
     }
 
     private void DisableAvaloniaDataAnnotationValidation()

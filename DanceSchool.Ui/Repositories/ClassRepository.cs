@@ -117,28 +117,30 @@ namespace DanceSchool.Ui.Repositories
                 .ToListAsync();
         }
 
-        public async Task<bool> IsStudioAvailableForClassAsync(int studioId, DateTime dateTime, int? excludeClassId = null)
+        public async Task<bool> IsStudioAvailableForClassAsync(int studioId, DateTime date, TimeSpan startTime, TimeSpan endTime, int? excludeClassId = null)
         {
-            var query = _dbSet.Where(c => c.StudioId == studioId &&
-                                         c.Date.Date == dateTime.Date &&
-                                         Math.Abs((c.Date - dateTime).TotalHours) < 1);
+            var classes = await _dbSet.Where(c => c.StudioId == studioId &&
+                                                 c.Date.Date == date.Date)
+                                     .ToListAsync();
 
             if (excludeClassId.HasValue)
-                query = query.Where(c => c.Id != excludeClassId.Value);
+                classes = classes.Where(c => c.Id != excludeClassId.Value).ToList();
 
-            return !await query.AnyAsync();
+            // Перевірка перетину часу на клієнті
+            return !classes.Any(c => c.StartTime < endTime && c.EndTime > startTime);
         }
 
-        public async Task<bool> IsInstructorAvailableForClassAsync(int instructorId, DateTime dateTime, int? excludeClassId = null)
+        public async Task<bool> IsInstructorAvailableForClassAsync(int instructorId, DateTime date, TimeSpan startTime, TimeSpan endTime, int? excludeClassId = null)
         {
-            var query = _dbSet.Where(c => c.InstructorId == instructorId &&
-                                         c.Date.Date == dateTime.Date &&
-                                         Math.Abs((c.Date - dateTime).TotalHours) < 1);
+            var classes = await _dbSet.Where(c => c.InstructorId == instructorId &&
+                                                 c.Date.Date == date.Date)
+                                     .ToListAsync();
 
             if (excludeClassId.HasValue)
-                query = query.Where(c => c.Id != excludeClassId.Value);
+                classes = classes.Where(c => c.Id != excludeClassId.Value).ToList();
 
-            return !await query.AnyAsync();
+            // Перевірка перетину часу на клієнті
+            return !classes.Any(c => c.StartTime < endTime && c.EndTime > startTime);
         }
     }
 }

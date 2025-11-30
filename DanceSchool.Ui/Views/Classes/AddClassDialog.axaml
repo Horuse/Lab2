@@ -11,8 +11,8 @@
 
     <StackPanel Spacing="24" Margin="24">
         <StackPanel Spacing="8">
-            <TextBlock Text="Додати заняття" Classes="h3" FontWeight="Bold" />
-            <TextBlock Text="Заповніть дані нового заняття" Classes="Small Muted" />
+            <TextBlock Text="{Binding Title}" Classes="h3" FontWeight="Bold" />
+            <TextBlock Text="Заповніть дані заняття" Classes="Small Muted" />
         </StackPanel>
 
         <StackPanel Spacing="16">
@@ -99,7 +99,7 @@
 
             <Button Grid.Column="2" 
                    Classes="Primary"
-                   Content="Додати"
+                   Content="{Binding SubmitText}"
                    Command="{Binding SubmitCommand}"
                    Width="100" />
         </Grid>

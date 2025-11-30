@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
+using CommunityToolkit.Mvvm.Input;
 using DanceSchool.Data.Entities;
 using DanceSchool.Data.Enums;
 using DanceSchool.Ui.Services;
@@ -20,6 +21,7 @@ namespace DanceSchool.Ui.ViewModels.Classes
         private readonly InstructorService _instructorService;
         private readonly StudioService _studioService;
         private readonly DialogManager _dialogManager;
+        private readonly ToastManager _toastManager;
         private int? _classId; // null для додавання, id для редагування
 
         [Required(ErrorMessage = "Дата є обов'язковою")]
@@ -60,10 +62,15 @@ namespace DanceSchool.Ui.ViewModels.Classes
         private bool _isLoading;
 
         [Reactive]
+        private bool _isBusy;
+
+        [Reactive]
         private string _title = "Додати заняття";
 
         [Reactive]
         private string _submitText = "Додати";
+
+        private string _warningToastCode = string.Empty;
 
         public ObservableCollection<Group> Groups { get; } = new();
         public ObservableCollection<Instructor> Instructors { get; } = new();
@@ -72,13 +79,14 @@ namespace DanceSchool.Ui.ViewModels.Classes
 
         public AddClassViewModel(ClassService classService, GroupService groupService, 
                                InstructorService instructorService, StudioService studioService, 
-                               DialogManager dialogManager)
+                               DialogManager dialogManager, ToastManager toastManager)
         {
             _classService = classService;
             _groupService = groupService;
             _instructorService = instructorService;
             _studioService = studioService;
             _dialogManager = dialogManager;
+            _toastManager = toastManager;
 
             // Initialize ClassTypes
             ClassTypes.Clear();
@@ -159,6 +167,7 @@ namespace DanceSchool.Ui.ViewModels.Classes
             
             if (HasErrors) return;
 
+            IsBusy = true;
             try
             {
                 if (_classId.HasValue)
@@ -207,14 +216,26 @@ namespace DanceSchool.Ui.ViewModels.Classes
             }
             catch (Exception ex)
             {
-                // SetError(nameof(Date), $"Помилка створення заняття: {ex.Message}");
+                ShowErrorToast(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
 
         [ReactiveCommand]
-        private void Cancel()
+        public void Cancel()
         {
             _dialogManager.Close(this, new CloseDialogOptions { Success = false });
+        }
+
+        [RelayCommand]
+        private void ShowErrorToast(string message)
+        {
+            _toastManager.CreateToast("Помилка при створенні заняття")
+                .WithContent(message)
+                .Show();
         }
     }
 }

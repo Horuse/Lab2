@@ -1,0 +1,74 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             xmlns:vm="using:DanceSchool.Ui.ViewModels.Studios"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600"
+             x:Class="DanceSchool.Ui.Views.Studios.AddStudioDialog"
+             x:DataType="vm:AddStudioViewModel">
+
+    <StackPanel Spacing="24" Margin="24">
+        <StackPanel Spacing="8">
+            <TextBlock Text="{Binding Title}" Classes="h3" FontWeight="Bold" />
+            <TextBlock Text="Заповніть дані студії" Classes="Small Muted" />
+        </StackPanel>
+        
+        <StackPanel Spacing="16">
+            <TextBox
+                Classes="Clearable"
+                UseFloatingWatermark="True"
+                Text="{Binding Name, Mode=TwoWay}"
+                Watermark="Введіть назву студії"
+                Width="300"
+                shadui:ControlAssist.Label="Назва" />
+            
+            <NumericUpDown
+                Value="{Binding Capacity, Mode=TwoWay}"
+                Minimum="1"
+                Maximum="200"
+                Width="300"
+                shadui:ControlAssist.Label="Місткість (осіб)" />
+            
+            <TextBox
+                Classes="Clearable"
+                UseFloatingWatermark="True"
+                Text="{Binding FloorType, Mode=TwoWay}"
+                Watermark="Наприклад: дерев'яна, лінолеум..."
+                Width="300"
+                shadui:ControlAssist.Label="Тип підлоги" />
+            
+            <TextBox
+                Classes="Clearable"
+                UseFloatingWatermark="True"
+                Text="{Binding Equipment, Mode=TwoWay}"
+                Watermark="Дзеркала, звукова система..."
+                Width="300"
+                AcceptsReturn="True"
+                TextWrapping="Wrap"
+                Height="80"
+                shadui:ControlAssist.Label="Обладнання" />
+            
+            <CheckBox
+                IsChecked="{Binding IsAvailable, Mode=TwoWay}"
+                Content="Доступна для використання" />
+            
+            <TextBox
+                Classes="Clearable"
+                UseFloatingWatermark="True"
+                Text="{Binding Notes, Mode=TwoWay}"
+                Watermark="Додаткові примітки..."
+                Width="300"
+                AcceptsReturn="True"
+                TextWrapping="Wrap"
+                Height="80"
+                shadui:ControlAssist.Label="Примітки" />
+        </StackPanel>
+        
+        <!-- Footer with buttons -->
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right" Margin="0,16,0,0">
+            <Button Classes="Outline" Command="{Binding CancelCommand}">Скасувати</Button>
+            <Button Classes="Primary" Command="{Binding SubmitCommand}" Content="{Binding SubmitText}" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

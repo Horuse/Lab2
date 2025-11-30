@@ -7,6 +7,7 @@ using DanceSchool.Ui.ViewModels.Groups;
 using DanceSchool.Ui.ViewModels.Classes;
 using DanceSchool.Ui.ViewModels.Instructors;
 using DanceSchool.Ui.ViewModels.Attendances;
+using DanceSchool.Ui.ViewModels.Studios;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Reactive;
@@ -26,17 +27,20 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public ObservableCollection<string> MenuItems { get; }
     public DialogManager DialogManager { get; }
+    public ToastManager ToastManager { get; }
 
     public StudentsViewModel StudentsViewModel { get; }
     public GroupsViewModel GroupsViewModel { get; }
     public ClassesViewModel ClassesViewModel { get; }
     public InstructorsViewModel InstructorsViewModel { get; }
     public AttendancesViewModel AttendancesViewModel { get; }
+    public StudiosViewModel StudiosViewModel { get; }
 
-    public MainWindowViewModel(IServiceProvider serviceProvider, DialogManager dialogManager)
+    public MainWindowViewModel(IServiceProvider serviceProvider, DialogManager dialogManager, ToastManager toastManager)
     {
         _serviceProvider = serviceProvider;
         DialogManager = dialogManager;
+        ToastManager = toastManager;
         
         // Initialize child ViewModels
         StudentsViewModel = _serviceProvider.GetRequiredService<StudentsViewModel>();
@@ -44,6 +48,7 @@ public partial class MainWindowViewModel : ViewModelBase
         ClassesViewModel = _serviceProvider.GetRequiredService<ClassesViewModel>();
         InstructorsViewModel = _serviceProvider.GetRequiredService<InstructorsViewModel>();
         AttendancesViewModel = _serviceProvider.GetRequiredService<AttendancesViewModel>();
+        StudiosViewModel = _serviceProvider.GetRequiredService<StudiosViewModel>();
         
         // Setup navigation from classes to attendance
         ClassesViewModel.NavigateToGroupAttendance = NavigateToGroupAttendance;
@@ -82,6 +87,9 @@ public partial class MainWindowViewModel : ViewModelBase
                 break;
             case "Attendance":
                 AttendancesViewModel.LoadGroupsCommand.Execute(Unit.Default);
+                break;
+            case "Studios":
+                StudiosViewModel.LoadStudiosCommand.Execute(Unit.Default);
                 break;
         }
     }

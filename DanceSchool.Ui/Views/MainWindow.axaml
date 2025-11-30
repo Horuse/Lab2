@@ -10,6 +10,7 @@
                xmlns:instructorViews="using:DanceSchool.Ui.Views.Instructors"
                xmlns:classViews="using:DanceSchool.Ui.Views.Classes"
                xmlns:attendanceViews="using:DanceSchool.Ui.Views.Attendances"
+               xmlns:studioViews="using:DanceSchool.Ui.Views.Studios"
                mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
                x:Class="DanceSchool.Ui.Views.MainWindow"
                x:DataType="vm:MainWindowViewModel"
@@ -22,6 +23,7 @@
         <shadui:DialogHost 
             Manager="{Binding DialogManager}"
             Owner="{Binding RelativeSource={RelativeSource AncestorType=shadui:Window}}"/>
+        <shadui:ToastHost Manager="{Binding ToastManager}" />
     </shadui:Window.Hosts>
 
     <Design.DataContext>
@@ -335,12 +337,8 @@
                 <!--     <attendanceViews:AttendancesView DataContext="{Binding AttendancesViewModel}"/> -->
                 <!-- </StackPanel> -->
 
-                <StackPanel IsVisible="{Binding SelectedView, Converter={StaticResource StringEquals}, ConverterParameter=Studios}"
-                           HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
-                    <TextBlock Classes="LucideIcon" Text="&#57507;" FontSize="64" HorizontalAlignment="Center" Opacity="0.3"/>
-                    <TextBlock Text="Студії" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
-                    <TextBlock Text="Цей розділ в розробці" Classes="Small Muted" HorizontalAlignment="Center"/>
-                </StackPanel>
+                <studioViews:StudiosView IsVisible="{Binding $parent[Panel].DataContext.SelectedView, Converter={StaticResource StringEquals}, ConverterParameter=Studios}"
+                                         DataContext="{Binding StudiosViewModel}"/>
             </Panel>
         </DockPanel>
     </Grid>

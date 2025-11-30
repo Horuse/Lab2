@@ -17,7 +17,7 @@ namespace DanceSchool.Ui.Repositories
         Task<IEnumerable<Class>> GetClassesByDateRangeAsync(DateTime startDate, DateTime endDate);
         Task<IEnumerable<Class>> GetUpcomingClassesAsync();
         Task<IEnumerable<Class>> GetClassesByTypeAsync(ClassType classType);
-        Task<bool> IsStudioAvailableForClassAsync(int studioId, DateTime dateTime, int? excludeClassId = null);
-        Task<bool> IsInstructorAvailableForClassAsync(int instructorId, DateTime dateTime, int? excludeClassId = null);
+        Task<bool> IsStudioAvailableForClassAsync(int studioId, DateTime date, TimeSpan startTime, TimeSpan endTime, int? excludeClassId = null);
+        Task<bool> IsInstructorAvailableForClassAsync(int instructorId, DateTime date, TimeSpan startTime, TimeSpan endTime, int? excludeClassId = null);
     }
 }
